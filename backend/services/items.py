@@ -4,9 +4,11 @@ def list_items(category_id=None, seller_id=None, status=None):
     """List all items with optional filters."""
     query = """
         SELECT i.id, i.title, i.price, i.status, i.image_url, 
-               c.name as category_name, i.description, i.seller_id
+               c.name as category_name, i.description, i.seller_id,
+               u.name as seller_name
         FROM items i
         JOIN categories c ON i.category_id = c.id
+        JOIN users u ON i.seller_id = u.id
         WHERE 1=1
     """
     params = []

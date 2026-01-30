@@ -49,28 +49,43 @@ def seed_data():
             # =================================================================
             # USERS - One seller, one buyer
             # =================================================================
+                        # =================================================================
+            # USERS - Three marketplace users (each can buy and sell)
+            # =================================================================
             print("Creating users...")
-            cur.execute("""
-                INSERT INTO users (email, name) VALUES 
-                (%s, %s) RETURNING id
-            """, ('alice@campus.edu', 'Alice Chen'))
-            seller_id = cur.fetchone()['id']
             
+            # User 1: Ajay
             cur.execute("""
                 INSERT INTO users (email, name) VALUES 
                 (%s, %s) RETURNING id
-            """, ('bob@campus.edu', 'Bob Miller'))
-            buyer_id = cur.fetchone()['id']
+            """, ('ajay@campus.edu', 'Ajay'))
+            ajay_id = cur.fetchone()['id']
+            
+            # User 2: Ritik
+            cur.execute("""
+                INSERT INTO users (email, name) VALUES 
+                (%s, %s) RETURNING id
+            """, ('ritik@campus.edu', 'Ritik'))
+            ritik_id = cur.fetchone()['id']
+            
+            # User 3: Manu
+            cur.execute("""
+                INSERT INTO users (email, name) VALUES 
+                (%s, %s) RETURNING id
+            """, ('manu@campus.edu', 'Manu'))
+            manu_id = cur.fetchone()['id']
+            
             conn.commit()
-            print(f"  Created seller: Alice Chen (ID: {seller_id})")
-            print(f"  Created buyer: Bob Miller (ID: {buyer_id})")
+            print(f"  Created user: Ajay (ID: {ajay_id})")
+            print(f"  Created user: Ritik (ID: {ritik_id})")
+            print(f"  Created user: Manu (ID: {manu_id})")
 
             # =================================================================
             # CATEGORIES
             # =================================================================
             print("Creating categories...")
             categories = {}
-            for cat_name in ['Electronics', 'Books', 'Furniture']:
+            for cat_name in ['Electronics', 'Books','Accessories', 'Furniture','Sports', 'Clothing', 'Other']:
                 cur.execute("""
                     INSERT INTO categories (name) VALUES (%s) RETURNING id
                 """, (cat_name,))
@@ -81,56 +96,86 @@ def seed_data():
             # =================================================================
             # ITEMS - Realistic marketplace items with placeholder images
             # =================================================================
+            # =================================================================
+# ITEMS - Student life / CSE focused marketplace items
+# =================================================================
             print("Creating items...")
+
             items_data = [
-                # Available items
+                # Ajay's items (CSE student)
                 {
-                    'title': 'Dell XPS 15 Laptop',
-                    'description': 'Excellent condition, 16GB RAM, 512GB SSD. Used for one semester.',
+                    'title': 'HP Pavilion 15 Laptop',
+                    'description': 'Intel i5, 16GB RAM, 512GB SSD. Ideal for coding, DSA, and projects.',
                     'image_url': 'https://placehold.co/400x300/2563eb/white?text=Laptop',
-                    'price': 899.00,
+                    'price': 720.00,
                     'status': 'available',
-                    'category': 'Electronics'
+                    'category': 'Electronics',
+                    'seller': ajay_id
                 },
                 {
-                    'title': 'IKEA Study Desk',
-                    'description': 'White MALM desk, 140x65cm. Minor scratches but sturdy.',
-                    'image_url': 'https://placehold.co/400x300/16a34a/white?text=Desk',
-                    'price': 75.00,
+                    'title': 'CSE Textbook Set (DSA + OS)',
+                    'description': 'CLRS Data Structures + Operating System Concepts. Lightly used.',
+                    'image_url': 'https://placehold.co/400x300/dc2626/white?text=CSE+Books',
+                    'price': 55.00,
                     'status': 'available',
-                    'category': 'Furniture'
+                    'category': 'Books',
+                    'seller': ajay_id
                 },
-                # Items that will have completed/expired/cancelled reservations
+
+                # Ritik's items (hostel essentials)
                 {
-                    'title': 'Physics Textbook Bundle',
-                    'description': 'Halliday & Resnick + Lab Manual. Highlighted but complete.',
-                    'image_url': 'https://placehold.co/400x300/dc2626/white?text=Books',
-                    'price': 45.00,
-                    'status': 'sold',  # Completed reservation
-                    'category': 'Books'
+                    'title': 'Winter Hoodie (Size L)',
+                    'description': 'Warm cotton hoodie, perfect for hostel winters. Worn twice.',
+                    'image_url': 'https://placehold.co/400x300/16a34a/white?text=Hoodie',
+                    'price': 18.00,
+                    'status': 'available',
+                    'category': 'Clothing',
+                    'seller': ritik_id
                 },
                 {
-                    'title': 'Mechanical Keyboard',
-                    'description': 'Keychron K2, Brown switches. Great for coding.',
+                    'title': 'Mechanical Keyboard (Red Switches)',
+                    'description': 'Ant Esports mechanical keyboard. Smooth typing for coding.',
                     'image_url': 'https://placehold.co/400x300/9333ea/white?text=Keyboard',
-                    'price': 65.00,
-                    'status': 'available',  # Expired reservation (item back to available)
-                    'category': 'Electronics'
+                    'price': 40.00,
+                    'status': 'available',
+                    'category': 'Electronics',
+                    'seller': ritik_id
+                },
+
+                # Manu's items (study + daily use)
+                {
+                    'title': 'Engineering Mathematics Book',
+                    'description': 'Advanced Engineering Mathematics by Erwin Kreyszig. Good condition.',
+                    'image_url': 'https://placehold.co/400x300/f59e0b/white?text=Maths+Book',
+                    'price': 22.00,
+                    'status': 'sold',
+                    'category': 'Books',
+                    'seller': manu_id
                 },
                 {
-                    'title': 'Ergonomic Office Chair',
-                    'description': 'Mesh back, adjustable height. Perfect for long study sessions.',
-                    'image_url': 'https://placehold.co/400x300/f59e0b/white?text=Chair',
-                    'price': 120.00,
-                    'status': 'available',  # Cancelled reservation (item back to available)
-                    'category': 'Furniture'
-                },
+                    'title': 'Laptop Backpack (Water Resistant)',
+                    'description': '15.6-inch laptop backpack with multiple compartments.',
+                    'image_url': 'https://placehold.co/400x300/0f172a/white?text=Backpack',
+                    'price': 25.00,
+                    'status': 'available',
+                    'category': 'Accessories',
+                    'seller': manu_id
+                }
             ]
-            
+
             created_items = {}
+
             for item in items_data:
                 cur.execute("""
-                    INSERT INTO items (title, description, image_url, price, status, seller_id, category_id)
+                    INSERT INTO items (
+                        title,
+                        description,
+                        image_url,
+                        price,
+                        status,
+                        seller_id,
+                        category_id
+                    )
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     RETURNING id
                 """, (
@@ -139,76 +184,79 @@ def seed_data():
                     item['image_url'],
                     item['price'],
                     item['status'],
-                    seller_id,
+                    item['seller'],
                     categories[item['category']]
                 ))
+
                 created_items[item['title']] = cur.fetchone()['id']
-            conn.commit()
-            print(f"  Created {len(created_items)} items")
+
 
             # =================================================================
             # RESERVATIONS - Different statuses for demo
             # =================================================================
+            # =================================================================
+# RESERVATIONS - Different statuses for demo
+# =================================================================
             print("Creating reservations...")
             now = datetime.now(timezone.utc)
-            
-            # 1. COMPLETED reservation (Physics Textbook)
+
+            # 1. COMPLETED reservation (Engineering Mathematics Book - already sold)
             cur.execute("""
                 INSERT INTO reservations (item_id, buyer_id, status, expires_at, created_at)
                 VALUES (%s, %s, 'completed', %s, %s)
             """, (
-                created_items['Physics Textbook Bundle'],
-                buyer_id,
+                created_items['Engineering Mathematics Book'],
+                ritik_id,  # Ritik bought from Manu
                 now - timedelta(days=5),  # Expired 5 days ago
                 now - timedelta(days=7)   # Created 7 days ago
             ))
-            print("  Created COMPLETED reservation (Physics Textbook)")
-            
+            print("  Created COMPLETED reservation (Engineering Mathematics Book)")
+
             # 2. EXPIRED reservation (Mechanical Keyboard)
             cur.execute("""
                 INSERT INTO reservations (item_id, buyer_id, status, expires_at, created_at)
                 VALUES (%s, %s, 'expired', %s, %s)
             """, (
-                created_items['Mechanical Keyboard'],
-                buyer_id,
+                created_items['Mechanical Keyboard (Red Switches)'],
+                ajay_id,  # Ajay tried to reserve Ritik's keyboard but didn't complete
                 now - timedelta(hours=12),  # Expired 12 hours ago
                 now - timedelta(days=2)     # Created 2 days ago
             ))
             print("  Created EXPIRED reservation (Mechanical Keyboard)")
-            
-            # 3. CANCELLED reservation (Office Chair)
+
+            # 3. CANCELLED reservation (Laptop Backpack)
             cur.execute("""
                 INSERT INTO reservations (item_id, buyer_id, status, expires_at, created_at)
                 VALUES (%s, %s, 'cancelled', %s, %s)
             """, (
-                created_items['Ergonomic Office Chair'],
-                buyer_id,
+                created_items['Laptop Backpack (Water Resistant)'],
+                ajay_id,  # Ajay cancelled his reservation on Manu's backpack
                 now + timedelta(hours=20),  # Would have expired later
                 now - timedelta(days=1)     # Created yesterday
             ))
-            print("  Created CANCELLED reservation (Office Chair)")
-            
-            # 4. ACTIVE reservation (IKEA Desk) - for testing Confirm Sale
+            print("  Created CANCELLED reservation (Laptop Backpack)")
+
+            # 4. ACTIVE reservation (HP Laptop) - for testing Confirm Sale
             cur.execute("""
                 INSERT INTO reservations (item_id, buyer_id, status, expires_at, created_at)
                 VALUES (%s, %s, 'active', %s, %s)
             """, (
-                created_items['IKEA Study Desk'],
-                buyer_id,
+                created_items['HP Pavilion 15 Laptop'],
+                manu_id,  # Manu is reserving Ajay's laptop
                 now + timedelta(hours=23),  # Expires in 23 hours
                 now - timedelta(hours=1)    # Created 1 hour ago
             ))
             # Update item status to reserved
             cur.execute("""
                 UPDATE items SET status = 'reserved' WHERE id = %s
-            """, (created_items['IKEA Study Desk'],))
-            print("  Created ACTIVE reservation (IKEA Desk)")
-            
+            """, (created_items['HP Pavilion 15 Laptop'],))
+            print("  Created ACTIVE reservation (HP Laptop)")
+
             conn.commit()
             print("\nDemo data summary:")
-            print(f"  Users: 2 (1 seller, 1 buyer)")
-            print(f"  Categories: 3")
-            print(f"  Items: 5 (1 available, 1 reserved, 1 sold)")
+            print(f"  Users: 3 (Ajay, Ritik, Manu)")
+            print(f"  Categories: 7")
+            print(f"  Items: 6 (4 available, 1 reserved, 1 sold)")
             print(f"  Reservations: 4 (1 active, 1 completed, 1 expired, 1 cancelled)")
 
 if __name__ == "__main__":

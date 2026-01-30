@@ -78,14 +78,17 @@ This system provides a centralized platform where sellers can list items, buyers
 
 ## Demo Users
 
-The system includes two demo users for testing:
+The system includes three demo users for testing the marketplace:
 
-| User | Role | Purpose |
-|------|------|---------|
-| Alice Chen | Seller | Lists items, confirms sales |
-| Bob Miller | Buyer | Reserves items, cancels reservations |
+| User | Email | Demo Activity |
+|------|-------|---------------|
+| Ajay | ajay@campus.edu | Selling laptop & CSE textbooks, reserved Ritik's keyboard (expired) |
+| Ritik | ritik@campus.edu | Selling hoodie & keyboard, bought Manu's math book |
+| Manu | manu@campus.edu | Selling backpack & math book (sold), reserving Ajay's laptop |
 
-Both users see the same UI. Their different experiences come purely from the data returned by APIs.
+All users see the same UI and can both buy and sell. Their different experiences come purely from the data returned by APIs based on their interactions.
+
+---
 
 ---
 
