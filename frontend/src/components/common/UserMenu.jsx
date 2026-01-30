@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './UserMenu.css';
 
-function UserMenu({ currentUser, users, onUserChange }) {
+function UserMenu({ currentUser, users = [], onUserChange }) {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
     const navigate = useNavigate();
@@ -12,7 +12,7 @@ function UserMenu({ currentUser, users, onUserChange }) {
     // Get user initials for avatar
     const getInitials = (name) => {
         if (!name) return '?';
-        return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        return String(name).split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
     };
 
     // Close menu when clicking outside
@@ -41,10 +41,6 @@ function UserMenu({ currentUser, users, onUserChange }) {
         setIsOpen(false);
     };
 
-    if (!currentUser) {
-        return null;
-    }
-
     return (
         <div className="user-menu" ref={menuRef}>
             <button
@@ -53,42 +49,57 @@ function UserMenu({ currentUser, users, onUserChange }) {
                 aria-expanded={isOpen}
                 aria-haspopup="true"
             >
-                <div className="user-avatar">
-                    {getInitials(currentUser.name)}
-                </div>
-                <span className="user-name">{currentUser.name}</span>
+                {currentUser ? (
+                    <>
+                        <div className="user-avatar">
+                            {getInitials(currentUser.name)}
+                        </div>
+                        <span className="user-name">{currentUser.name}</span>
+                    </>
+                ) : (
+                    <>
+                        <div className="user-avatar" style={{ background: '#94a3b8' }}>
+                            👤
+                        </div>
+                        <span className="user-name">Log In</span>
+                    </>
+                )}
                 <span className="user-menu-chevron">▼</span>
             </button>
 
             {isOpen && <div className="user-menu-backdrop" onClick={() => setIsOpen(false)} />}
 
             <div className={`user-menu-dropdown ${isOpen ? 'open' : ''}`}>
-                {/* Navigation Section */}
-                <div className="user-menu-section">
-                    <button
-                        className="user-menu-item"
-                        onClick={() => handleMenuItemClick('/my-items')}
-                    >
-                        <span className="user-menu-item-icon">📦</span>
-                        <span className="user-menu-item-label">My Items</span>
-                    </button>
-                    <button
-                        className="user-menu-item"
-                        onClick={() => handleMenuItemClick('/my-reservations')}
-                    >
-                        <span className="user-menu-item-icon">🔖</span>
-                        <span className="user-menu-item-label">My Reservations</span>
-                    </button>
-                </div>
+                {/* Navigation Section - Only if logged in */}
+                {currentUser && (
+                    <div className="user-menu-section">
+                        <button
+                            className="user-menu-item"
+                            onClick={() => handleMenuItemClick('/my-items')}
+                        >
+                            <span className="user-menu-item-icon">📦</span>
+                            <span className="user-menu-item-label">My Items</span>
+                        </button>
+                        <button
+                            className="user-menu-item"
+                            onClick={() => handleMenuItemClick('/my-reservations')}
+                        >
+                            <span className="user-menu-item-icon">🔖</span>
+                            <span className="user-menu-item-label">My Reservations</span>
+                        </button>
+                    </div>
+                )}
 
                 {/* Demo Users Section */}
-                {users && users.length > 1 && (
+                {users && users.length > 0 && (
                     <div className="user-menu-section">
-                        <div className="demo-users-header">Demo Users</div>
+                        <div className="demo-users-header">
+                            {currentUser ? 'Switch User' : 'Select User'}
+                        </div>
                         {users.map(user => (
                             <button
                                 key={user.id}
-                                className={`demo-user-item ${currentUser.id === user.id ? 'active' : ''}`}
+                                className={`demo-user-item ${currentUser?.id === user.id ? 'active' : ''}`}
                                 onClick={() => handleUserSelect(user)}
                             >
                                 <div className="demo-user-avatar">

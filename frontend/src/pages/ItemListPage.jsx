@@ -25,11 +25,11 @@ function ItemListPage({ currentUser }) {
 
     const { items: allItems, loading, error, refetch } = useItems(filters);
 
-// Filter out current user's items
+    // Filter out current user's items
     const items = currentUser
         ? allItems.filter(item => item.seller_id !== currentUser.id && item.status !== ITEM_STATUS.SOLD)
         : allItems.filter(item => item.status !== ITEM_STATUS.SOLD);
-        const { categories, loading: categoriesLoading } = useCategories();
+    const { categories, loading: categoriesLoading } = useCategories();
 
     const handleCategoryChange = (categoryId) => {
         setSelectedCategory(categoryId);
@@ -56,26 +56,6 @@ function ItemListPage({ currentUser }) {
 
     return (
         <div className="item-list-page">
-            <header className="page-header">
-                <h1 className="page-title">Browse Items</h1>
-
-                {/* Summary Pills */}
-                {!loading && allItems.length > 0 && (
-                    <div className="status-summary">
-                        <span className="summary-pill summary-available">
-                            <span className="summary-dot"></span>
-                            {availableCount} Available
-                        </span>
-                        {reservedCount > 0 && (
-                            <span className="summary-pill summary-reserved">
-                                <span className="summary-dot"></span>
-                                {reservedCount} Reserved
-                            </span>
-                        )}
-                    </div>
-                )}
-            </header>
-
             <div className="filters-bar">
                 <div className="filter-group">
                     <span className="filter-label">Category:</span>
@@ -110,7 +90,7 @@ function ItemListPage({ currentUser }) {
                             <span className="filter-dot filter-dot-reserved"></span>
                             Reserved {!statusFilter && `(${reservedCount})`}
                         </button>
-  
+
                     </div>
                 </div>
             </div>

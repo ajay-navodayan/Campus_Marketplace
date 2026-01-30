@@ -1,5 +1,5 @@
-// MyItemsPage - Seller view of their listings
-
+// MyItemsPage - Seller view with filter tabs and two-column layout
+import { useState } from 'react';
 import { useItems } from '../hooks/useItems';
 import ItemGrid from '../components/items/ItemGrid';
 import { Link } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { ITEM_STATUS } from '../constants/status';
 import './MyItemsPage.css';
 
 function MyItemsPage({ currentUser }) {
+    const [activeFilter, setActiveFilter] = useState('all');
     const { items, loading, error } = useItems(
         currentUser ? { seller_id: currentUser.id } : {}
     );
@@ -22,10 +23,26 @@ function MyItemsPage({ currentUser }) {
         );
     }
 
-    // Group items by status for seller clarity
+    // Count items by status
     const availableItems = items.filter(i => i.status === ITEM_STATUS.AVAILABLE);
     const reservedItems = items.filter(i => i.status === ITEM_STATUS.RESERVED);
     const soldItems = items.filter(i => i.status === ITEM_STATUS.SOLD);
+
+    // Filter items based on active filter
+    const getFilteredItems = () => {
+        switch (activeFilter) {
+            case 'available':
+                return availableItems;
+            case 'reserved':
+                return reservedItems;
+            case 'sold':
+                return soldItems;
+            default:
+                return items;
+        }
+    };
+
+    const filteredItems = getFilteredItems();
 
     return (
         <div className="my-items-page">
@@ -39,6 +56,37 @@ function MyItemsPage({ currentUser }) {
                 </Link>
             </header>
 
+            {/* Filter Tabs */}
+            <div className="filter-tabs">
+                <button
+                    className={`filter-tab ${activeFilter === 'all' ? 'active' : ''}`}
+                    onClick={() => setActiveFilter('all')}
+                >
+                    All ({items.length})
+                </button>
+                <button
+                    className={`filter-tab filter-tab-available ${activeFilter === 'available' ? 'active' : ''}`}
+                    onClick={() => setActiveFilter('available')}
+                >
+                    <span className="tab-dot available"></span>
+                    Available ({availableItems.length})
+                </button>
+                <button
+                    className={`filter-tab filter-tab-reserved ${activeFilter === 'reserved' ? 'active' : ''}`}
+                    onClick={() => setActiveFilter('reserved')}
+                >
+                    <span className="tab-dot reserved"></span>
+                    Reserved ({reservedItems.length})
+                </button>
+                <button
+                    className={`filter-tab filter-tab-sold ${activeFilter === 'sold' ? 'active' : ''}`}
+                    onClick={() => setActiveFilter('sold')}
+                >
+                    <span className="tab-dot sold"></span>
+                    Sold ({soldItems.length})
+                </button>
+            </div>
+
             {loading ? (
                 <div className="page-message">Loading your items...</div>
             ) : error ? (
@@ -48,31 +96,13 @@ function MyItemsPage({ currentUser }) {
                     You haven't listed any items yet.
                     <Link to="/items/new" className="page-message-link">Create your first listing</Link>
                 </div>
+            ) : filteredItems.length === 0 ? (
+                <div className="page-message">
+                    No {activeFilter} items found.
+                </div>
             ) : (
-                <div className="items-sections">
-                    {reservedItems.length > 0 && (
-                        <section className="items-section">
-                            <h2 className="section-title">
-                                Pending Sale ({reservedItems.length})
-                                <span className="section-hint">Buyer reserved - confirm or cancel</span>
-                            </h2>
-                            <ItemGrid items={reservedItems} currentUser={currentUser} />
-                        </section>
-                    )}
-
-                    {availableItems.length > 0 && (
-                        <section className="items-section">
-                            <h2 className="section-title">Available ({availableItems.length})</h2>
-                            <ItemGrid items={availableItems} currentUser={currentUser} />
-                        </section>
-                    )}
-
-                    {soldItems.length > 0 && (
-                        <section className="items-section">
-                            <h2 className="section-title">Sold ({soldItems.length})</h2>
-                            <ItemGrid items={soldItems} currentUser={currentUser} />
-                        </section>
-                    )}
+                <div className="items-grid-container">
+                    <ItemGrid items={filteredItems} currentUser={currentUser} />
                 </div>
             )}
         </div>

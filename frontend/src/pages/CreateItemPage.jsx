@@ -47,11 +47,6 @@ function CreateItemPage({ currentUser }) {
 
     return (
         <div className="create-item-page">
-            <header className="page-header">
-                <h1 className="page-title">List an Item</h1>
-                <p className="page-subtitle">Create a new listing to sell</p>
-            </header>
-
             {error && <div className="error-banner">{error}</div>}
 
             <div className="form-container">

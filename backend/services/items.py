@@ -1,14 +1,21 @@
 from db import get_cursor, get_db
 
 def list_items(category_id=None, seller_id=None, status=None):
-    """List all items with optional filters."""
+    """List all items with optional filters. Includes buyer info for sold/reserved items."""
     query = """
         SELECT i.id, i.title, i.price, i.status, i.image_url, 
                c.name as category_name, i.description, i.seller_id,
-               u.name as seller_name
+               u.name as seller_name,
+               buyer.id as buyer_id,
+               buyer.name as buyer_name,
+               buyer.mobile_number as buyer_mobile,
+               buyer.hostel_name as buyer_hostel,
+               buyer.room_number as buyer_room
         FROM items i
         JOIN categories c ON i.category_id = c.id
         JOIN users u ON i.seller_id = u.id
+        LEFT JOIN reservations r ON i.id = r.item_id AND r.status IN ('active', 'completed')
+        LEFT JOIN users buyer ON r.buyer_id = buyer.id
         WHERE 1=1
     """
     params = []
@@ -50,10 +57,21 @@ def get_item(item_id):
                    i.created_at, i.updated_at,
                    c.name as category_name,
                    u.name as seller_name,
-                   u.email as seller_email
+                   u.email as seller_email,
+                   u.mobile_number as seller_mobile,
+                   u.hostel_name as seller_hostel,
+                   u.room_number as seller_room,
+                   buyer.id as buyer_id,
+                   buyer.name as buyer_name,
+                   buyer.email as buyer_email,
+                   buyer.mobile_number as buyer_mobile,
+                   buyer.hostel_name as buyer_hostel,
+                   buyer.room_number as buyer_room
             FROM items i
             JOIN categories c ON i.category_id = c.id
             JOIN users u ON i.seller_id = u.id
+            LEFT JOIN reservations r ON i.id = r.item_id AND r.status IN ('active', 'completed')
+            LEFT JOIN users buyer ON r.buyer_id = buyer.id
             WHERE i.id = %s
         """, (item_id,))
         return cur.fetchone()

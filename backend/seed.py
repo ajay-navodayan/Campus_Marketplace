@@ -50,35 +50,35 @@ def seed_data():
             # USERS - One seller, one buyer
             # =================================================================
                         # =================================================================
-            # USERS - Three marketplace users (each can buy and sell)
+            # USERS - Three marketplace users with contact details
             # =================================================================
             print("Creating users...")
             
             # User 1: Ajay
             cur.execute("""
-                INSERT INTO users (email, name) VALUES 
-                (%s, %s) RETURNING id
-            """, ('ajay@campus.edu', 'Ajay'))
+                INSERT INTO users (email, name, mobile_number, year, hostel_name, room_number) VALUES 
+                (%s, %s, %s, %s, %s, %s) RETURNING id
+            """, ('ajay@campus.edu', 'Ajay', '9798867386', '3rd Year', 'CV Raman', '229'))
             ajay_id = cur.fetchone()['id']
             
             # User 2: Ritik
             cur.execute("""
-                INSERT INTO users (email, name) VALUES 
-                (%s, %s) RETURNING id
-            """, ('ritik@campus.edu', 'Ritik'))
+                INSERT INTO users (email, name, mobile_number, year, hostel_name, room_number) VALUES 
+                (%s, %s, %s, %s, %s, %s) RETURNING id
+            """, ('ritik@campus.edu', 'Ritik', '9798729015', '3rd Year', 'CV Raman', '256'))
             ritik_id = cur.fetchone()['id']
             
             # User 3: Manu
             cur.execute("""
-                INSERT INTO users (email, name) VALUES 
-                (%s, %s) RETURNING id
-            """, ('manu@campus.edu', 'Manu'))
+                INSERT INTO users (email, name, mobile_number, year, hostel_name, room_number) VALUES 
+                (%s, %s, %s, %s, %s, %s) RETURNING id
+            """, ('manu@campus.edu', 'Manu', '8252126190', '3rd Year', 'CV Raman', '210'))
             manu_id = cur.fetchone()['id']
             
             conn.commit()
-            print(f"  Created user: Ajay (ID: {ajay_id})")
-            print(f"  Created user: Ritik (ID: {ritik_id})")
-            print(f"  Created user: Manu (ID: {manu_id})")
+            print(f"  Created user: Ajay (ID: {ajay_id}) - 📱 9798867386")
+            print(f"  Created user: Ritik (ID: {ritik_id}) - 📱 9798729015")
+            print(f"  Created user: Manu (ID: {manu_id}) - 📱 8252126190")
 
             # =================================================================
             # CATEGORIES

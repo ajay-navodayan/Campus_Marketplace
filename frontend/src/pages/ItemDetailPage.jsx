@@ -179,32 +179,76 @@ function ItemDetailPage({ currentUser }) {
 
                 </div>
 
-            {/* Reservation state - only show when reserved */}
-            {item.status === ITEM_STATUS.RESERVED && reservation && (
-                <div className="reservation-info">
-                    <ReservationTimer expiresAt={reservation.expires_at} />
-                    {isBuyer && (
-                        <div className="buyer-reservation-message">
-                            <div className="message-icon">⏳</div>
-                            <div className="message-content">
-                                <strong>Reserved by you</strong>
-                                <p>Waiting for seller confirmation. You can cancel if needed.</p>
+                {/* Reservation state - only show when reserved */}
+                {item.status === ITEM_STATUS.RESERVED && reservation && (
+                    <div className="reservation-info">
+                        <ReservationTimer expiresAt={reservation.expires_at} />
+                        {isBuyer && (
+                            <div className="buyer-reservation-message">
+                                <div className="message-icon">⏳</div>
+                                <div className="message-content">
+                                    <strong>Reserved by you</strong>
+                                    <p>Waiting for seller confirmation. You can cancel if needed.</p>
+                                </div>
                             </div>
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {/* Show success message when item is sold and buyer was the one who reserved */}
-            {item.status === ITEM_STATUS.SOLD && reservation?.buyer_id === currentUser?.id && (
-                <div className="sale-confirmed-message">
-                    <div className="message-icon">✅</div>
-                    <div className="message-content">
-                        <strong>Order Confirmed!</strong>
-                        <p>Contact seller <strong>{item.seller_name}</strong> ({item.seller_email}) to complete the transaction.</p>
+                        )}
                     </div>
-                </div>
-            )}
+                )}
+
+                {/* Always Show Seller Contact Info for potential buyers */}
+                {!isOwner && (
+                    <div className="contact-info-card">
+                        <h4>📞 Seller Contact</h4>
+                        <div className="contact-details">
+                            <p><strong>{item.seller_name}</strong></p>
+                            {item.seller_mobile && <p>📱 {item.seller_mobile}</p>}
+                            {item.seller_hostel && item.seller_room && (
+                                <p>🏠 {item.seller_hostel}, Room {item.seller_room}</p>
+                            )}
+                            <p className="contact-hint text-sm text-gray-500 mt-2">
+                                Contact the seller to arrange meetup or ask questions.
+                            </p>
+                        </div>
+                    </div>
+                )}
+                {/* Show buyer contact info to seller when their item is reserved */}
+                {isOwner && reservation && (
+                    <div className="contact-info-card">
+                        <h4>📞 Buyer Contact</h4>
+                        <div className="contact-details">
+                            <p><strong>{reservation.buyer_name}</strong></p>
+                            {reservation.buyer_mobile && <p>📱 {reservation.buyer_mobile}</p>}
+                            {reservation.buyer_hostel && reservation.buyer_room && (
+                                <p>🏠 {reservation.buyer_hostel}, Room {reservation.buyer_room}</p>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {/* Show success message when item is sold and buyer was the one who reserved */}
+                {item.status === ITEM_STATUS.SOLD && reservation?.buyer_id === currentUser?.id && (
+                    <div className="sale-confirmed-message">
+                        <div className="message-icon">✅</div>
+                        <div className="message-content">
+                            <strong>Order Confirmed!</strong>
+                            <p>Contact seller <strong>{item.seller_name}</strong> ({item.seller_email}) to complete the transaction.</p>
+                        </div>
+                    </div>
+                )}
+
+                {/* Show buyer contact info to seller when item is SOLD */}
+                {isOwner && item.status === ITEM_STATUS.SOLD && item.buyer_name && (
+                    <div className="contact-info-card">
+                        <h4>✅ Sold to</h4>
+                        <div className="contact-details">
+                            <p><strong>{item.buyer_name}</strong></p>
+                            {item.buyer_mobile && <p>📱 {item.buyer_mobile}</p>}
+                            {item.buyer_hostel && item.buyer_room && (
+                                <p>🏠 {item.buyer_hostel}, Room {item.buyer_room}</p>
+                            )}
+                        </div>
+                    </div>
+                )}
 
                 {/* Action error */}
                 {actionError && (
@@ -243,7 +287,7 @@ function ItemDetailPage({ currentUser }) {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

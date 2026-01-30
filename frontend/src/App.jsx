@@ -20,12 +20,21 @@ function App() {
   useEffect(() => {
     getUsers()
       .then(data => {
-        setUsers(data);
-        if (data.length > 0) {
-          setCurrentUser(data[0]);
+        const userList = Array.isArray(data) ? data : [];
+        setUsers(userList);
+
+        // Auto-login Ajay
+        const ajay = userList.find(u => u.name === 'Ajay');
+        if (ajay) {
+          setCurrentUser(ajay);
+        } else if (userList.length > 0) {
+          setCurrentUser(userList[0]);
         }
       })
-      .catch(console.error);
+      .catch(err => {
+        console.error('Failed to fetch users:', err);
+        setUsers([]);
+      });
   }, []);
 
   return (

@@ -17,11 +17,21 @@ def list_reservations(buyer_id=None, status=None):
             i.image_url as item_image_url,
             i.seller_id,
             c.name as category_name,
-            u.name as seller_name
+            seller.name as seller_name,
+            seller.email as seller_email,
+            seller.mobile_number as seller_mobile,
+            seller.hostel_name as seller_hostel,
+            seller.room_number as seller_room,
+            buyer.name as buyer_name,
+            buyer.email as buyer_email,
+            buyer.mobile_number as buyer_mobile,
+            buyer.hostel_name as buyer_hostel,
+            buyer.room_number as buyer_room
         FROM reservations r
         JOIN items i ON r.item_id = i.id
         JOIN categories c ON i.category_id = c.id
-        JOIN users u ON i.seller_id = u.id
+        JOIN users seller ON i.seller_id = seller.id
+        JOIN users buyer ON r.buyer_id = buyer.id
         WHERE 1=1
     """
     params = []
@@ -37,10 +47,11 @@ def list_reservations(buyer_id=None, status=None):
         cur.execute(query, params)
         return cur.fetchall()
 
-def reserve_item(item_id, buyer_id, duration_hours=24):
+def reserve_item(item_id, buyer_id, duration_hours=0.5):
     """
     Reserve an item for a buyer.
     Transactional: Check item -> Update item -> Create reservation.
+    Default reservation time is 30 minutes.
     """
     expires_at = datetime.now(timezone.utc) + timedelta(hours=duration_hours)
     
@@ -124,10 +135,12 @@ def cancel_reservation(reservation_id, user_id):
     conn = get_db()
     try:
         with conn.cursor() as cur:
-            # Check reservation exists and belongs to user
+            # Check reservation exists and belongs to user (Buyer OR Seller)
             cur.execute("""
-                SELECT item_id, buyer_id, status FROM reservations 
-                WHERE id = %s FOR UPDATE
+                SELECT r.item_id, r.buyer_id, r.status, i.seller_id 
+                FROM reservations r
+                JOIN items i ON r.item_id = i.id
+                WHERE r.id = %s FOR UPDATE
             """, (reservation_id,))
             res = cur.fetchone()
             
@@ -135,7 +148,8 @@ def cancel_reservation(reservation_id, user_id):
                 conn.rollback()
                 return {"error": "Reservation not found"}
             
-            if str(res['buyer_id']) != str(user_id):
+            # Allow cancellation if user is the Buyer OR the Seller
+            if str(res['buyer_id']) != str(user_id) and str(res['seller_id']) != str(user_id):
                 conn.rollback()
                 return {"error": "Not authorized to cancel this reservation"}
             
