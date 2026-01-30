@@ -40,7 +40,19 @@ function ReservationCard({ reservation, onConfirm, onCancel, confirming, cancell
                 <div className="reservation-card-status">
                     <StatusBadge status={reservation.status} type="reservation" />
                     {isActive && <ReservationTimer expiresAt={reservation.expires_at} />}
-                    
+
+                    {/* Show seller contact info when active reservation */}
+                    {isActive && reservation.seller_mobile && (
+                        <div className="reservation-contact-info">
+                            <span className="contact-label">📞 Seller:</span>
+                            <span className="contact-value">{sellerName}</span>
+                            <span className="contact-value">📱 {reservation.seller_mobile}</span>
+                            {reservation.seller_hostel && reservation.seller_room && (
+                                <span className="contact-value">🏠 {reservation.seller_hostel}, Room {reservation.seller_room}</span>
+                            )}
+                        </div>
+                    )}
+
                     {/* Show contact seller message when completed */}
                     {isCompleted && (
                         <div className="reservation-completed-message">
@@ -48,6 +60,12 @@ function ReservationCard({ reservation, onConfirm, onCancel, confirming, cancell
                             <div className="completed-text">
                                 <strong>Order Confirmed!</strong>
                                 <p>Contact <strong>{sellerName}</strong> to complete the transaction</p>
+                                {reservation.seller_mobile && (
+                                    <p className="contact-details">📱 {reservation.seller_mobile}</p>
+                                )}
+                                {reservation.seller_hostel && reservation.seller_room && (
+                                    <p className="contact-details">🏠 {reservation.seller_hostel}, Room {reservation.seller_room}</p>
+                                )}
                             </div>
                         </div>
                     )}

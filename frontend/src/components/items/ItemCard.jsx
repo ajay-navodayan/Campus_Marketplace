@@ -16,14 +16,17 @@ function ItemCard({ item, currentUser, onStatusClick }) {
         }).format(price);
     };
 
-    const categoryIcons = {
-        'Electronics': '💻',
-        'Books': '📚',
-        'Accessories': '🎒',
-        'Furniture': '🪑',
-        'Sports': '⚽',
-        'Clothing': '👕',
-        'Other': '📦'
+    const getCategoryColor = (categoryName) => {
+        const colors = {
+            'Electronics': 'blue',
+            'Books': 'amber',
+            'Accessories': 'purple',
+            'Furniture': 'emerald',
+            'Sports': 'rose',
+            'Clothing': 'pink',
+            'Other': 'slate'
+        };
+        return colors[categoryName] || 'indigo';
     };
 
     const isSold = item.status === ITEM_STATUS.SOLD;
@@ -51,9 +54,9 @@ function ItemCard({ item, currentUser, onStatusClick }) {
                 {item.image_url ? (
                     <img src={item.image_url} alt={item.title} loading="lazy" />
                 ) : (
-                    <div className="item-card-placeholder">
-                        <span className="placeholder-icon">
-                            {categoryIcons[item.category_name] || '📦'}
+                    <div className={`item-card-placeholder placeholder-${getCategoryColor(item.category_name)}`}>
+                        <span className="placeholder-text">
+                            {item.title.length > 10 ? item.title.substring(0, 10) + '..' : item.title}
                         </span>
                     </div>
                 )}
@@ -73,11 +76,27 @@ function ItemCard({ item, currentUser, onStatusClick }) {
             <div className="item-card-content">
                 {/* Category Tag */}
                 {item.category_name && (
-                    <span className="item-category">{item.category_name}</span>
+                    <span className={`item-category category-${getCategoryColor(item.category_name)}`}>
+                        {item.category_name}
+                    </span>
                 )}
 
                 {/* Title */}
                 <h3 className="item-title">{item.title}</h3>
+
+                {/* Buyer Info for Sold/Reserved items (only for seller) */}
+                {isOwner && (isSold || item.status === ITEM_STATUS.RESERVED) && item.buyer_name && (
+                    <div className="item-buyer-info">
+                        <div className="buyer-label">👤 {isSold ? 'Sold to' : 'Reserved by'}:</div>
+                        <div className="buyer-details">
+                            <span className="buyer-name">{item.buyer_name}</span>
+                            {item.buyer_mobile && <span className="buyer-contact">📱 {item.buyer_mobile}</span>}
+                            {item.buyer_hostel && item.buyer_room && (
+                                <span className="buyer-contact">🏠 {item.buyer_hostel}, Room {item.buyer_room}</span>
+                            )}
+                        </div>
+                    </div>
+                )}
 
                 {/* Price & Seller Footer */}
                 <div className="item-card-footer">

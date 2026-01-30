@@ -150,6 +150,7 @@
     border-radius: var(--radius-md);
     text-align: center;
 }
+
 .buyer-reservation-message,
 .sale-confirmed-message {
     display: flex;
@@ -191,4 +192,44 @@
     margin: 0;
     font-size: 0.875rem;
     line-height: 1.5;
+}
+
+/* Contact Info Card */
+.contact-info-card {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 1px solid #7dd3fc;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-top: 1rem;
+}
+
+.contact-info-card h4 {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #0369a1;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.contact-details p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #1e3a5f;
+}
+
+.contact-details p strong {
+    font-weight: 600;
+    color: #0c4a6e;
+}
+
+.reservation-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
 }
