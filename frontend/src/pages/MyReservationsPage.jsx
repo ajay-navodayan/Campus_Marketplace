@@ -14,20 +14,7 @@ function MyReservationsPage({ currentUser }) {
     const [actionId, setActionId] = useState(null);
     const [actionType, setActionType] = useState(null);
 
-    const handleConfirm = async (reservationId) => {
-        if (!currentUser) return;
-        setActionId(reservationId);
-        setActionType('confirm');
-        try {
-            await confirmReservation(reservationId);
-            refetch();
-        } catch (err) {
-            console.error('Confirm failed:', err);
-        } finally {
-            setActionId(null);
-            setActionType(null);
-        }
-    };
+
 
     const handleCancel = async (reservationId) => {
         if (!currentUser) return;
@@ -54,9 +41,12 @@ function MyReservationsPage({ currentUser }) {
         );
     }
 
-    // Separate active from past reservations
+    // Separate reservations by status
     const activeReservations = reservations.filter(r => r.status === RESERVATION_STATUS.ACTIVE);
-    const pastReservations = reservations.filter(r => r.status !== RESERVATION_STATUS.ACTIVE);
+    const completedReservations = reservations.filter(r => r.status === RESERVATION_STATUS.COMPLETED);
+    const cancelledReservations = reservations.filter(r => 
+        r.status === RESERVATION_STATUS.CANCELLED || r.status === RESERVATION_STATUS.EXPIRED
+    );
 
     return (
         <div className="my-reservations-page">
@@ -80,9 +70,9 @@ function MyReservationsPage({ currentUser }) {
                     {activeReservations.length > 0 && (
                         <section className="reservations-section">
                             <h2 className="section-title">Active Reservations</h2>
+                            <p className="section-note">⏳ Waiting for seller confirmation. You can cancel anytime.</p>
                             <ReservationList
                                 reservations={activeReservations}
-                                onConfirm={handleConfirm}
                                 onCancel={handleCancel}
                                 actionId={actionId}
                                 actionType={actionType}
@@ -90,13 +80,25 @@ function MyReservationsPage({ currentUser }) {
                         </section>
                     )}
 
-                    {pastReservations.length > 0 && (
+                    {completedReservations.length > 0 && (
                         <section className="reservations-section">
-                            <h2 className="section-title">Past Reservations</h2>
-                            <ReservationList reservations={pastReservations} />
+                            <h2 className="section-title"> Completed Orders</h2>
+                            <p className="section-note">📦 Successfully completed - Contact sellers for any questions</p>
+                            <ReservationList reservations={completedReservations} />
+                        </section>
+                    )}
+
+                    {cancelledReservations.length > 0 && (
+                        <section className="reservations-section">
+                            <h2 className="section-title"> Cancelled/Expired</h2>
+                            <p className="section-note">⚠️ These reservations were cancelled or expired</p>
+                            <ReservationList reservations={cancelledReservations} />
                         </section>
                     )}
                 </div>
+                
+                
+                
             )}
         </div>
     );

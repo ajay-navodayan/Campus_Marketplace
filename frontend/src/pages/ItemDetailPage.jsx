@@ -165,21 +165,46 @@ function ItemDetailPage({ currentUser }) {
                 <div className="item-detail-meta">
                     <div className="meta-item">
                         <span className="meta-label">Seller:</span>
-                        <span className="meta-value">User #{item.seller_id}</span>
+                        <span className="meta-value"> {item.seller_name}</span>
                     </div>
                     <div className="meta-item">
                         <span className="meta-label">Listed:</span>
                         <span className="meta-value">{new Date(item.created_at).toLocaleDateString()}</span>
                     </div>
+
+                    <div className="meta-item">
+                        <span className="meta-label">Category:</span>
+                        <span className="meta-value">{item.category_name}</span>
+                    </div>
+
                 </div>
 
-                {/* Reservation state - only show when reserved */}
-                {item.status === ITEM_STATUS.RESERVED && reservation && (
-                    <div className="reservation-info">
-                        <ReservationTimer expiresAt={reservation.expires_at} />
-                        {isBuyer && <span className="reservation-yours">You reserved this item</span>}
+            {/* Reservation state - only show when reserved */}
+            {item.status === ITEM_STATUS.RESERVED && reservation && (
+                <div className="reservation-info">
+                    <ReservationTimer expiresAt={reservation.expires_at} />
+                    {isBuyer && (
+                        <div className="buyer-reservation-message">
+                            <div className="message-icon">⏳</div>
+                            <div className="message-content">
+                                <strong>Reserved by you</strong>
+                                <p>Waiting for seller confirmation. You can cancel if needed.</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* Show success message when item is sold and buyer was the one who reserved */}
+            {item.status === ITEM_STATUS.SOLD && reservation?.buyer_id === currentUser?.id && (
+                <div className="sale-confirmed-message">
+                    <div className="message-icon">✅</div>
+                    <div className="message-content">
+                        <strong>Order Confirmed!</strong>
+                        <p>Contact seller <strong>{item.seller_name}</strong> ({item.seller_email}) to complete the transaction.</p>
                     </div>
-                )}
+                </div>
+            )}
 
                 {/* Action error */}
                 {actionError && (

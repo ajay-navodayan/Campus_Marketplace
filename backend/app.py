@@ -92,6 +92,14 @@ def mark_item_sold_endpoint(item_id):
             
             # Update item to sold
             cur.execute("UPDATE items SET status = 'sold', updated_at = NOW() WHERE id = %s", (item_id,))
+            
+            # Also mark any active reservations as completed
+            cur.execute("""
+                UPDATE reservations 
+                SET status = 'completed' 
+                WHERE item_id = %s AND status = 'active'
+            """, (item_id,))
+            
             conn.commit()
             
             return jsonify({"status": "sold", "item_id": item_id}), 200

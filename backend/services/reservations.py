@@ -15,10 +15,13 @@ def list_reservations(buyer_id=None, status=None):
             i.price as item_price,
             i.status as item_status,
             i.image_url as item_image_url,
-            c.name as category_name
+            i.seller_id,
+            c.name as category_name,
+            u.name as seller_name
         FROM reservations r
         JOIN items i ON r.item_id = i.id
         JOIN categories c ON i.category_id = c.id
+        JOIN users u ON i.seller_id = u.id
         WHERE 1=1
     """
     params = []

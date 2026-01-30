@@ -9,11 +9,13 @@ import './ReservationCard.css';
 
 function ReservationCard({ reservation, onConfirm, onCancel, confirming, cancelling }) {
     const isActive = reservation.status === RESERVATION_STATUS.ACTIVE;
+    const isCompleted = reservation.status === RESERVATION_STATUS.COMPLETED;
 
     // Use full item details from reservation
     const itemTitle = reservation.item_title || 'Unknown Item';
     const itemPrice = reservation.item_price;
     const categoryName = reservation.category_name;
+    const sellerName = reservation.seller_name || 'Seller';
     const imageUrl = reservation.item_image_url || 'https://placehold.co/80x80/e2e8f0/64748b?text=No+Image';
 
     return (
@@ -31,13 +33,24 @@ function ReservationCard({ reservation, onConfirm, onCancel, confirming, cancell
                     </Link>
                     <div className="reservation-item-meta">
                         {categoryName && <span className="reservation-category">{categoryName}</span>}
-                        {itemPrice && <span className="reservation-price">${Number(itemPrice).toFixed(2)}</span>}
+                        {itemPrice && <span className="reservation-price">₹{Number(itemPrice).toFixed(2)}</span>}
                     </div>
                 </div>
 
                 <div className="reservation-card-status">
                     <StatusBadge status={reservation.status} type="reservation" />
                     {isActive && <ReservationTimer expiresAt={reservation.expires_at} />}
+                    
+                    {/* Show contact seller message when completed */}
+                    {isCompleted && (
+                        <div className="reservation-completed-message">
+                            <div className="completed-icon">✅</div>
+                            <div className="completed-text">
+                                <strong>Order Confirmed!</strong>
+                                <p>Contact <strong>{sellerName}</strong> to complete the transaction</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 

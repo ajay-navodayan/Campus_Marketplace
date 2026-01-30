@@ -150,3 +150,45 @@
     border-radius: var(--radius-md);
     text-align: center;
 }
+.buyer-reservation-message,
+.sale-confirmed-message {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    border: 1px solid;
+}
+
+.buyer-reservation-message {
+    background: #fef3c7;
+    border-color: #fbbf24;
+    color: #92400e;
+}
+
+.sale-confirmed-message {
+    background: #d1fae5;
+    border-color: #10b981;
+    color: #065f46;
+}
+
+.message-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.message-content {
+    flex: 1;
+}
+
+.message-content strong {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.message-content p {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}

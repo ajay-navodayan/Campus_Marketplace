@@ -23,8 +23,13 @@ function ItemListPage({ currentUser }) {
         ...(statusFilter && { status: statusFilter })
     };
 
-    const { items, loading, error, refetch } = useItems(filters);
-    const { categories, loading: categoriesLoading } = useCategories();
+    const { items: allItems, loading, error, refetch } = useItems(filters);
+
+// Filter out current user's items
+    const items = currentUser
+        ? allItems.filter(item => item.seller_id !== currentUser.id && item.status !== ITEM_STATUS.SOLD)
+        : allItems.filter(item => item.status !== ITEM_STATUS.SOLD);
+        const { categories, loading: categoriesLoading } = useCategories();
 
     const handleCategoryChange = (categoryId) => {
         setSelectedCategory(categoryId);
@@ -45,10 +50,9 @@ function ItemListPage({ currentUser }) {
     }, [selectedCategory, statusFilter]);
 
     // Count by status for filter buttons
-    const allItems = items; // Already filtered by category
-    const availableCount = allItems.filter(i => i.status === ITEM_STATUS.AVAILABLE).length;
-    const reservedCount = allItems.filter(i => i.status === ITEM_STATUS.RESERVED).length;
-    const soldCount = allItems.filter(i => i.status === ITEM_STATUS.SOLD).length;
+    const availableCount = items.filter(i => i.status === ITEM_STATUS.AVAILABLE).length;
+    const reservedCount = items.filter(i => i.status === ITEM_STATUS.RESERVED).length;
+    const soldCount = items.filter(i => i.status === ITEM_STATUS.SOLD).length;
 
     return (
         <div className="item-list-page">
@@ -106,13 +110,7 @@ function ItemListPage({ currentUser }) {
                             <span className="filter-dot filter-dot-reserved"></span>
                             Reserved {!statusFilter && `(${reservedCount})`}
                         </button>
-                        <button
-                            className={`filter-btn filter-btn-sold ${statusFilter === ITEM_STATUS.SOLD ? 'active' : ''}`}
-                            onClick={() => setStatusFilter(ITEM_STATUS.SOLD)}
-                        >
-                            <span className="filter-dot filter-dot-sold"></span>
-                            Sold {!statusFilter && `(${soldCount})`}
-                        </button>
+  
                     </div>
                 </div>
             </div>

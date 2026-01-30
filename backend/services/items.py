@@ -44,5 +44,16 @@ def create_item(seller_id, category_id, title, price, description=None, image_ur
 def get_item(item_id):
     """Get item by ID."""
     with get_cursor() as cur:
-        cur.execute("SELECT * FROM items WHERE id = %s", (item_id,))
+        cur.execute("""
+            SELECT i.id, i.title, i.price, i.status, i.image_url, 
+                   i.description, i.seller_id, i.category_id,
+                   i.created_at, i.updated_at,
+                   c.name as category_name,
+                   u.name as seller_name,
+                   u.email as seller_email
+            FROM items i
+            JOIN categories c ON i.category_id = c.id
+            JOIN users u ON i.seller_id = u.id
+            WHERE i.id = %s
+        """, (item_id,))
         return cur.fetchone()
