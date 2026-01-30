@@ -1,0 +1,20 @@
+.item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.item-grid-message {
+    padding: var(--spacing-xl);
+    text-align: center;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+}
+
+.item-grid-error {
+    color: #dc2626;
+    background: #fef2f2;
+    border-color: #fecaca;
+}

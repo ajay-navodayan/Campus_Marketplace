@@ -1,0 +1,80 @@
+/* ItemCard - Clean, scannable item cards */
+
+.item-card {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.item-card:hover {
+    border-color: var(--border-color-hover);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.item-card:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.item-card-sold {
+    opacity: 0.6;
+}
+
+.item-card-sold:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Status Badge - Top Right */
+.item-card-badge {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+}
+
+/* Category */
+.item-category {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: var(--spacing-xs);
+}
+
+/* Title */
+.item-title {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.3;
+    padding-right: 80px;
+    /* Space for badge */
+}
+
+/* Price - Prominent */
+.item-price {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: var(--spacing-xs);
+}
+
+/* Seller */
+.item-seller {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: auto;
+    padding-top: var(--spacing-sm);
+}
+
+.item-owner-tag {
+    color: var(--accent);
+    font-weight: 500;
+}

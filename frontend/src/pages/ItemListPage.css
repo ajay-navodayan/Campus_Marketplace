@@ -1,0 +1,156 @@
+.item-list-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+/* Page Header */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.page-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* Summary Pills */
+.status-summary {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.summary-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.summary-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.summary-available {
+    background: var(--status-available-bg);
+    color: var(--status-available-text);
+}
+
+.summary-available .summary-dot {
+    background: var(--status-available-text);
+}
+
+.summary-reserved {
+    background: var(--status-reserved-bg);
+    color: var(--status-reserved-text);
+}
+
+.summary-reserved .summary-dot {
+    background: var(--status-reserved-text);
+}
+
+/* Filters Bar */
+.filters-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.filter-label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.status-filters {
+    display: flex;
+    gap: 6px;
+}
+
+/* Filter Buttons */
+.filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.filter-btn:hover {
+    border-color: var(--border-color-hover);
+    background: var(--bg-secondary);
+}
+
+.filter-btn.active {
+    background: var(--text-primary);
+    border-color: var(--text-primary);
+    color: white;
+}
+
+/* Filter Dots */
+.filter-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.filter-dot-available {
+    background: var(--status-available-text);
+}
+
+.filter-dot-reserved {
+    background: var(--status-reserved-text);
+}
+
+.filter-dot-sold {
+    background: var(--status-sold-text);
+}
+
+.filter-btn.active .filter-dot {
+    background: white;
+}
+
+/* Active state colors */
+.filter-btn-available.active {
+    background: var(--status-available-text);
+    border-color: var(--status-available-text);
+}
+
+.filter-btn-reserved.active {
+    background: var(--status-reserved-text);
+    border-color: var(--status-reserved-text);
+}
+
+.filter-btn-sold.active {
+    background: var(--status-sold-text);
+    border-color: var(--status-sold-text);
+}
