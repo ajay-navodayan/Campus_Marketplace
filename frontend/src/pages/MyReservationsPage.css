@@ -1,21 +1,38 @@
+/* MyReservationsPage - Enhanced styling */
+
 .my-reservations-page {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    max-width: 800px;
-    padding: 1rem;
+    gap: var(--spacing-xl);
+    max-width: 900px;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .page-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid var(--border-color);
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
 }
 
 .page-title {
-    font-size: 2rem;
+    font-size: var(--font-size-2xl);
     font-weight: 700;
     color: var(--text-primary);
     margin: 0;
@@ -30,20 +47,20 @@
     background: linear-gradient(135deg, #fef3c7, #fde68a);
     color: #92400e;
     border: 2px solid #fbbf24;
-    border-radius: 20px;
-    font-size: 0.875rem;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
     font-weight: 600;
     box-shadow: 0 2px 4px rgba(251, 191, 36, 0.2);
 }
 
 .page-message {
-    padding: 2rem;
+    padding: var(--spacing-2xl);
     text-align: center;
     color: var(--text-secondary);
     background: var(--bg-card);
     border: 2px dashed var(--border-color);
-    border-radius: 12px;
-    font-size: 1rem;
+    border-radius: var(--radius-xl);
+    font-size: var(--font-size-base);
 }
 
 .page-error {
@@ -56,28 +73,28 @@
 .reservations-sections {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: var(--spacing-2xl);
 }
 
 .reservations-section {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--spacing-md);
     background: var(--bg-card);
-    padding: 1.5rem;
-    border-radius: 12px;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-xl);
     border: 1px solid var(--border-color);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-sm);
 }
 
 .section-title {
-    font-size: 1.25rem;
+    font-size: var(--font-size-lg);
     font-weight: 700;
     color: var(--text-primary);
     margin: 0;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
 }
 
 .section-title::before {
@@ -90,11 +107,22 @@
 
 .section-note {
     margin: 0;
-    padding: 0.75rem 1rem;
+    padding: var(--spacing-md);
     background: linear-gradient(135deg, #dbeafe, #bfdbfe);
     border-left: 4px solid #3b82f6;
-    border-radius: 6px;
+    border-radius: var(--radius-md);
     color: #1e40af;
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
     font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .my-reservations-page {
+        max-width: 100%;
+    }
+
+    .page-header {
+        flex-direction: column;
+        text-align: center;
+    }
 }

@@ -1,7 +1,18 @@
+# =============================================================================
+# Campus Marketplace Backend - Requirements
+# =============================================================================
+# Install with: pip install -r requirements.txt
+# =============================================================================
+
 # Web Framework
-flask
-flask-cors
+flask>=3.0.0
+flask-cors>=4.0.0
 
-# Database Driver
-psycopg[pool]
+# PostgreSQL Database Driver (psycopg 3 with connection pooling)
+psycopg[pool]>=3.1.0
 
+# Production WSGI Server (optional, for deployment)
+gunicorn>=21.0.0
+
+# Environment Variables (optional, for local development)
+python-dotenv>=1.0.0

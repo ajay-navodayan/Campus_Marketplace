@@ -1,19 +1,39 @@
+/* MyItemsPage - Enhanced styling with better layout */
+
 .my-items-page {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xl);
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .page-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
 }
 
 .page-title {
     font-size: var(--font-size-2xl);
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-primary);
     margin: 0;
 }
@@ -25,18 +45,29 @@
 }
 
 .page-message {
-    padding: var(--spacing-xl);
+    padding: var(--spacing-2xl);
     text-align: center;
     color: var(--text-secondary);
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
+    font-size: var(--font-size-base);
 }
 
 .page-message-link {
-    display: block;
+    display: inline-block;
     margin-top: var(--spacing-md);
     color: var(--accent);
+    font-weight: 600;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background: var(--accent-light);
+    border-radius: var(--radius-lg);
+    transition: all 0.2s;
+}
+
+.page-message-link:hover {
+    background: var(--accent);
+    color: white;
 }
 
 .page-error {
@@ -48,7 +79,7 @@
 .items-sections {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xl);
+    gap: var(--spacing-2xl);
 }
 
 .items-section {
@@ -59,16 +90,29 @@
 
 .section-title {
     font-size: var(--font-size-lg);
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-primary);
     margin: 0;
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--border-color);
 }
 
 .section-hint {
     font-size: var(--font-size-sm);
     font-weight: 400;
     color: var(--text-muted);
+    padding: 4px 12px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-full);
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
 }

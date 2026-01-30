@@ -1,5 +1,4 @@
-// ItemCard component - Clear, functional item display
-// Entire card is clickable, status badge filters when clicked
+// ItemCard component - Enhanced with product images and modern styling
 
 import { useNavigate } from 'react-router-dom';
 import StatusBadge from '../common/StatusBadge';
@@ -17,6 +16,15 @@ function ItemCard({ item, currentUser, onStatusClick }) {
         }).format(price);
     };
 
+    const categoryIcons = {
+        'Electronics': '💻',
+        'Books': '📚',
+        'Accessories': '🎒',
+        'Furniture': '🪑',
+        'Sports': '⚽',
+        'Clothing': '👕',
+        'Other': '📦'
+    };
 
     const isSold = item.status === ITEM_STATUS.SOLD;
     const isOwner = currentUser && item.seller_id === currentUser.id;
@@ -38,34 +46,50 @@ function ItemCard({ item, currentUser, onStatusClick }) {
             role="button"
             tabIndex={0}
         >
-            {/* Status Badge - Top Right, Clickable to filter */}
-            <div className="item-card-badge">
-                <StatusBadge
-                    status={item.status}
-                    type="item"
-                    clickable={!!onStatusClick}
-                    onClick={handleStatusClick}
-                />
+            {/* Image Section */}
+            <div className="item-card-image">
+                {item.image_url ? (
+                    <img src={item.image_url} alt={item.title} loading="lazy" />
+                ) : (
+                    <div className="item-card-placeholder">
+                        <span className="placeholder-icon">
+                            {categoryIcons[item.category_name] || '📦'}
+                        </span>
+                    </div>
+                )}
+
+                {/* Status Badge - Overlay on image */}
+                <div className="item-card-badge">
+                    <StatusBadge
+                        status={item.status}
+                        type="item"
+                        clickable={!!onStatusClick}
+                        onClick={handleStatusClick}
+                    />
+                </div>
             </div>
 
-            {/* Category Tag */}
-            {item.category_name && (
-                <span className="item-category">{item.category_name}</span>
-            )}
-
-            {/* Title */}
-            <h3 className="item-title">{item.title}</h3>
-
-            {/* Price - Prominent */}
-            <div className="item-price">{formatPrice(item.price)}</div>
-
-            {/* Seller Info */}
-            <div className="item-seller">
-                {item.seller_name ? (
-                    <span>Listed by {isOwner ? 'you' : item.seller_name}</span>
-                ) : (
-                    isOwner && <span className="item-owner-tag">Your listing</span>
+            {/* Content Section */}
+            <div className="item-card-content">
+                {/* Category Tag */}
+                {item.category_name && (
+                    <span className="item-category">{item.category_name}</span>
                 )}
+
+                {/* Title */}
+                <h3 className="item-title">{item.title}</h3>
+
+                {/* Price & Seller Footer */}
+                <div className="item-card-footer">
+                    <span className="item-price">{formatPrice(item.price)}</span>
+                    <span className="item-seller">
+                        {item.seller_name ? (
+                            isOwner ? 'Your listing' : `by ${item.seller_name}`
+                        ) : (
+                            isOwner && 'Your listing'
+                        )}
+                    </span>
+                </div>
             </div>
         </div>
     );
