@@ -213,7 +213,7 @@ We include a unified runner script that handles dependency setup and process man
 2. Navigate to the `backend` folder and create a `.env` file.
 3. Add your database URL to the `.env` file:
    ```env
-   DATABASE_URL=postgresql://username:password@localhost:5432/campus_marketplace
+   DATABASE_URL="postgresql://username:password@localhost:5432/campus_marketplace"
    ```
    > **Note**: If your password contains special characters (like `@`), encode them (e.g., `%40`).
    > **Note**: If your port is different from 5432, change it in the DATABASE_URL.
