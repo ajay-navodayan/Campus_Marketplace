@@ -9,7 +9,7 @@ flask==3.0.0
 flask-cors==4.0.0
 
 # PostgreSQL Database Driver (psycopg 3 with connection pooling and binaries)
-psycopg[binary,pool]==3.1.8
+psycopg[binary,pool]>=3.2.0
 
 # Environment Variables
 python-dotenv==1.0.0

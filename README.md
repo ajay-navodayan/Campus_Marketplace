@@ -1,218 +1,245 @@
-# Campus Marketplace
+# 🎓 Campus Marketplace
 
-A lightweight campus marketplace system designed to demonstrate clean API-driven architecture and transactional integrity in a full-stack application.
-
----
-
-## Problem Statement
-
-Campus communities often struggle with:
-
-- **Scattered listings** — Items posted across multiple platforms (WhatsApp groups, notice boards, social media)
-- **Reservation conflicts** — Multiple buyers interested in the same item with no coordination
-- **Unclear availability** — No way to know if an item is still available or already claimed
-
-This system provides a centralized platform where sellers can list items, buyers can reserve them, and the entire flow is managed through a single source of truth.
+A secure, transactional peer-to-peer marketplace designed to solve the chaos of unorganized campus buying and selling.
 
 ---
 
-## System Overview
+## Table of Contents
 
-### How It Works
+- [Problem Statement](#-problem-statement)
+- [System Overview](#-system-overview)
+- [Assumptions](#-assumptions)
+- [Architecture](#️-architecture)
+- [Database Schema](#-database-schema)
+- [API Reference](#-api-reference)
+- [Out of Scope](#-out-of-scope-intentional-decisions)
+- [Future Enhancements](#-future-enhancements)
+- [Setup & Run](#-setup--run)
 
-1. **Listing** — Sellers create item listings with title, description, price, and category
-2. **Reservation** — Buyers reserve available items (item becomes "reserved" for 24 hours)
-3. **Confirmation** — Seller confirms the sale (item becomes "sold") or buyer cancels (item returns to "available")
+## 🧐 Problem Statement
 
-### Key Design Principles
+Campus communities often struggle with peer-to-peer listings due to:
 
-| Principle | Implementation |
-|-----------|----------------|
-| Backend is the single source of truth | All state changes happen via API → Database → Response |
-| Frontend contains no business logic | UI only renders data from API responses |
-| Same UI for all users | Alice and Bob see the same components; differences are data-driven |
-| Transactional integrity | Reservation logic uses database constraints and atomic transactions |
+- Listings being scattered across chats and notice boards
+- Unclear availability of items
+- Multiple users attempting to claim the same item
+- Resulting conflicts and misunderstandings
 
----
+**Chosen Problem: Unclear Availability**
 
-## Architecture
+This project intentionally focuses on solving the **unclear availability** problem.
 
-### Backend
+**Why Availability?**
 
-- **Framework**: Flask (Python)
-- **Database**: PostgreSQL
-- **Data Access**: Raw SQL (no ORM)
-- **Driver**: psycopg
+Unclear availability is the core issue that triggers many of the other problems:
 
-#### Database Schema
+- When availability is not explicit, listings naturally become scattered across multiple platforms.
 
-| Table | Purpose |
-|-------|---------|
-| `users` | Demo users (Alice, Bob) |
-| `categories` | Item categories (Electronics, Books, Furniture) |
-| `items` | Listings with status (available, reserved, sold) |
-| `reservations` | Reservation records with status (active, completed, cancelled, expired) |
+- Lack of availability guarantees leads to multiple users attempting to claim the same item simultaneously.
 
-#### Transaction Guarantees
+- This directly results in conflicts, confusion, and poor user experience.
 
-- `reserve_item`: Atomically updates item status + creates reservation
-- `confirm_reservation`: Atomically marks reservation completed + item sold
-- `cancel_reservation`: Atomically marks reservation cancelled + item available
+By designing the system around explicit, enforceable availability, the solution indirectly addresses:
 
-### Frontend
+- Listing fragmentation
 
-- **Framework**: React
-- **Build Tool**: Vite
-- **Language**: JavaScript
+- Double-claiming of items
 
-#### Main Views
+- Conflicts and misunderstandings
 
-| Page | Purpose |
-|------|---------|
-| Browse Items | View all available items |
-| Item Detail | View item details, reserve if available |
-| My Reservations | View active and past reservations |
-| Create Listing | List a new item for sale |
+Rather than tackling every symptom independently, this project treats availability as the **single source of truth**.
 
 ---
 
-## Demo Users
+## 📖 System Overview
 
-The system includes three demo users for testing the marketplace:
+The application follows a strict **Single Source of Truth** architecture.
 
-| User | Email | Demo Activity |
-|------|-------|---------------|
-| Ajay | ajay@campus.edu | Selling laptop & CSE textbooks, reserved Ritik's keyboard (expired) |
-| Ritik | ritik@campus.edu | Selling hoodie & keyboard, bought Manu's math book |
-| Manu | manu@campus.edu | Selling backpack & math book (sold), reserving Ajay's laptop |
+### Core Workflow
+1.  **Listing**: A Seller lists an item (Status: `available`).
+2.  **Reservation**: A Buyer reserves the item. The backend performs an atomic transaction to creation a reservation and lock the item (Status: `reserved`).
+3.  **Exclusivity**: During the reservation period, it prevents other buyers from purchasing the item.
+4.  **Resolution**: 
+    *   **Sale**: Seller confirms the transaction (Status: `sold`).
+    *   **Cancel**: Buyer cancels or timer expires (Status: `available`).
 
-All users see the same UI and can both buy and sell. Their different experiences come purely from the data returned by APIs based on their interactions.
+## 🧠 Assumptions
 
----
-
----
-
-## API Overview
-
-### Items
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/items` | GET | List all items (with optional filters) |
-| `/items` | POST | Create a new item listing |
-| `/items/{id}` | GET | Get item details |
-| `/items/{id}/sold` | POST | Mark item as sold directly |
-
-### Reservations
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/reservations` | GET | List reservations (with optional filters) |
-| `/reservations` | POST | Create a reservation for an item |
-| `/reservations/{id}/confirm` | POST | Confirm sale (item → sold) |
-| `/reservations/{id}/cancel` | POST | Cancel reservation (item → available) |
-
-### Supporting
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/users` | GET | List demo users |
-| `/categories` | GET | List categories |
+- The platform is designed for informal, peer-to-peer exchanges within the student community, rather than institution-managed or official college listings.
+- Users are assumed to be pre-identified for the purpose of the demo.
+- All users act through a single centralized platform rather than external channels.
 
 ---
 
-## Running Locally
+## 🏗️ Architecture
+
+```mermaid
+graph TD
+    User((User))
+    subgraph "Frontend (Vite + React)"
+        UI[User Interface]
+        API_Client[API Client Layer]
+        UI --> API_Client
+    end
+    
+    subgraph "Backend (Flask)"
+        API_Client <-->|JSON / HTTP| Routes[API Routes]
+        Routes --> Services[Business Services]
+        Services --> DB_Pool[Connection Pool]
+    end
+    
+    subgraph "Data Persistence"
+        DB_Pool <-->|SQL / Psycopg3| VS[(PostgreSQL)]
+    end
+```
+
+### Component Breakdown
+
+*   **Frontend**: React (Vite)
+*   **Backend**: Flask
+*   **Database**: PostgreSQL with `psycopg`
+
+---
+
+## 💾 Database Schema
+
+The database relies on foreign key constraints and atomic transactions to ensure data integrity.
+
+### `items`
+The core inventory table.
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | UUID | Primary Key |
+| `title` | VARCHAR | Item name |
+| `price` | DECIMAL | Selling price |
+| `status` | VARCHAR | `available`, `reserved`, `sold` |
+| `seller_id` | UUID | FK to Users |
+| `category_id` | UUID | FK to Categories |
+
+### `reservations`
+Manages the temporary lock on items.
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | UUID | Primary Key |
+| `item_id` | UUID | FK to Items (Unique when status='active') |
+| `buyer_id` | UUID | FK to Users |
+| `status` | VARCHAR | `active`, `completed`, `cancelled` |
+| `expires_at` | TIMESTAMP | When the reservation auto-expires |
+
+### `users`
+Demo users for the simulation.
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | UUID | Primary Key |
+| `name` | VARCHAR | Display name (e.g., "Ajay", "Ritik") |
+| `email` | VARCHAR | Unique identifier |
+
+---
+
+## 🔌 API Reference
+
+### Items API
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/items` | List items. Filters: `category_id`, `status`. |
+| `POST` | `/items` | Create a new listing. Req: `title`, `price`, `seller_id`. |
+| `GET` | `/items/<id>` | Get details for a specific item. |
+| `POST` | `/items/<id>/sold` | Direct sale (bypass reservation). |
+
+### Reservations API
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/reservations` | List active bookings. |
+| `POST` | `/reservations` | Reserve an item. Req: `item_id`, `buyer_id`. |
+| `POST` | `/reservations/<id>/confirm` | **Seller Action**: Complete the sale. |
+| `POST` | `/reservations/<id>/cancel` | **Buyer Action**: Release the item. |
+
+---
+
+## 🚫 Out of Scope (Intentional Decisions)
+
+To keep the system focused on solving availability with clarity and correctness, the following were intentionally excluded:
+
+- **Payment integration**  
+  Payment flows introduce disputes, reversals, and edge cases that are orthogonal to availability enforcement.  
+  Excluding payments keeps the system focused on reservation correctness rather than financial resolution.
+
+- **Authentication & authorization**  
+  The system assumes pre-identified users to reduce onboarding friction and demo complexity.  
+  This avoids introducing identity-related failure modes that do not impact availability logic.
+
+- Messaging or chat between buyers and sellers  
+- Recommendation or ranking algorithms  
+- Moderation or dispute-resolution workflows  
+
+These exclusions ensure the system demonstrates a clear, enforceable availability model without masking issues behind auxiliary features.
+
+
+## 🔮 Future Enhancements
+
+This system is intentionally extensible. Possible future improvements include:
+
+- **Event tracking & notifications**  
+  Instrumenting key lifecycle events (reservation created, expired, completed) and notifying users in real time via push, email, or in-app alerts.
+
+- **Authentication & authorization**  
+  Introducing proper identity management to support role-based actions and secure access.
+
+- **Real-time availability updates**  
+  Using WebSockets or Server-Sent Events to reflect availability changes instantly across clients.
+
+- **Payment integration**  
+  Adding escrow-based or wallet-based payments without altering the availability enforcement model.
+
+- **Analytics & audit logs**  
+  Tracking reservation outcomes to identify friction points and optimize system behavior.
+
+
+---
+
+## 🚀 Setup & Run
+
+We include a unified runner script that handles dependency setup and process management for both backend and frontend.
 
 ### Prerequisites
+*   **Python 3.10+**
+*   **Node.js 18+**
+*   **PostgreSQL** (Service must be running)
 
-- Python 3.10+
-- Node.js 18+
-- PostgreSQL (running locally)
-
-### Database Setup
-
-1. Create a PostgreSQL database named `campus_marketplace`
-2. Set the `DATABASE_URL` environment variable:
-   ```bash
-   export DATABASE_URL="postgresql://username:password@localhost:5432/campus_marketplace"
+### 1. Database Setup
+1. Create a local database named `campus_marketplace`.
+2. Navigate to the `backend` folder and create a `.env` file.
+3. Add your database URL to the `.env` file:
+   ```env
+   DATABASE_URL=postgresql://username:password@localhost:5432/campus_marketplace
    ```
+   > **Note**: If your password contains special characters (like `@`), encode them (e.g., `%40`).
+   > **Note**: If your port is different from 5432, change it in the DATABASE_URL.
 
-### Backend
-
-```bash
-cd backend
-
-# Create virtual environment
-python -m venv ../venv
-source ../venv/bin/activate  # On Windows: ..\venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Seed the database
-python seed.py
-
-# Run the server
-flask run --host=0.0.0.0 --port=8000
-```
-
-### Frontend
+### 2. Auto-Start
+The `run.py` script will create a virtual environment, install dependencies (pip & npm), seed the database, and start both servers.
 
 ```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
+python run.py
 ```
 
-The frontend runs at `http://localhost:5173` and connects to the backend at `http://localhost:8000`.
-
----
-
-## Project Structure
-
-```
+### Project Structure
+```text
+/
 ├── backend/
-│   ├── app.py              # Flask routes
-│   ├── db.py               # Database connection pool
-│   ├── schema.sql          # Table definitions
-│   ├── seed.py             # Demo data seeding
-│   ├── requirements.txt    # Python dependencies
-│   └── services/           # Business logic
-│       ├── items.py
-│       ├── categories.py
-│       ├── users.py
-│       └── reservations.py
+│   ├── app.py              # Application Entry Point
+│   ├── services/           # Domain Logic (Reservations, Items)
+│   ├── db.py               # Database Connection Handling
+│   └── requirements.txt    # Python Dependencies
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── api/            # API client functions
-│   │   ├── components/     # Reusable UI components
-│   │   ├── hooks/          # Custom React hooks
-│   │   ├── pages/          # Page components
-│   │   └── constants/      # Status constants
-│   ├── package.json
-│   └── vite.config.js
+│   │   ├── pages/          # Full Page Views
+│   │   ├── components/     # UI Components
+│   │   └── api/            # API Wrappers
+│   └── package.json        # JS Dependencies
+│
+└── run.py                  # Automation Runner
 ```
-
----
-
-## Non-Goals
-
-This is an interview assignment focused on demonstrating architecture. The following are **intentionally not implemented**:
-
-- ❌ Authentication / Authorization
-- ❌ Payment processing
-- ❌ Image uploads
-- ❌ Real-time updates
-- ❌ Production deployment
-- ❌ Rate limiting / Security hardening
-
----
-
-## Author
-
-Built as a Product/System Design interview assignment demonstrating clean architecture, API-driven design, and transactional database operations.
