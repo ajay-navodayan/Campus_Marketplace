@@ -29,7 +29,8 @@
 .form-group textarea,
 .form-group select {
     padding: 14px 16px;
-    background: var(--bg-secondary);
+    background: #eeeff3;
+    /* White inputs for better contrast on cream bg */
     border: 2px solid var(--border-color);
     border-radius: var(--radius-lg);
     font-size: var(--font-size-base);

@@ -46,12 +46,9 @@ def seed_data():
             cur.execute("TRUNCATE TABLE reservations, items, categories, users CASCADE;")
             conn.commit()
             
-            # =================================================================
+           
             # USERS - One seller, one buyer
-            # =================================================================
-                        # =================================================================
-            # USERS - Three marketplace users with contact details
-            # =================================================================
+            
             print("Creating users...")
             
             # User 1: Ajay
@@ -80,9 +77,9 @@ def seed_data():
             print(f"  Created user: Ritik (ID: {ritik_id}) - 📱 9798729015")
             print(f"  Created user: Manu (ID: {manu_id}) - 📱 8252126190")
 
-            # =================================================================
+       
             # CATEGORIES
-            # =================================================================
+       
             print("Creating categories...")
             categories = {}
             for cat_name in ['Electronics', 'Books','Accessories', 'Furniture','Sports', 'Clothing', 'Other']:
@@ -93,12 +90,9 @@ def seed_data():
             conn.commit()
             print(f"  Created {len(categories)} categories")
 
-            # =================================================================
+           
             # ITEMS - Realistic marketplace items with placeholder images
-            # =================================================================
-            # =================================================================
-# ITEMS - Student life / CSE focused marketplace items
-# =================================================================
+            
             print("Creating items...")
 
             items_data = [
@@ -106,7 +100,7 @@ def seed_data():
                 {
                     'title': 'HP Pavilion 15 Laptop',
                     'description': 'Intel i5, 16GB RAM, 512GB SSD. Ideal for coding, DSA, and projects.',
-                    'image_url': 'https://placehold.co/400x300/2563eb/white?text=Laptop',
+                    'image_url': None,  # Will use category image
                     'price': 720.00,
                     'status': 'available',
                     'category': 'Electronics',
@@ -115,7 +109,7 @@ def seed_data():
                 {
                     'title': 'CSE Textbook Set (DSA + OS)',
                     'description': 'CLRS Data Structures + Operating System Concepts. Lightly used.',
-                    'image_url': 'https://placehold.co/400x300/dc2626/white?text=CSE+Books',
+                    'image_url': None,  # Will use category image
                     'price': 55.00,
                     'status': 'available',
                     'category': 'Books',
@@ -126,7 +120,7 @@ def seed_data():
                 {
                     'title': 'Winter Hoodie (Size L)',
                     'description': 'Warm cotton hoodie, perfect for hostel winters. Worn twice.',
-                    'image_url': 'https://placehold.co/400x300/16a34a/white?text=Hoodie',
+                    'image_url': None,  # Will use category image
                     'price': 18.00,
                     'status': 'available',
                     'category': 'Clothing',
@@ -135,7 +129,7 @@ def seed_data():
                 {
                     'title': 'Mechanical Keyboard (Red Switches)',
                     'description': 'Ant Esports mechanical keyboard. Smooth typing for coding.',
-                    'image_url': 'https://placehold.co/400x300/9333ea/white?text=Keyboard',
+                    'image_url': None,  # Will use category image
                     'price': 40.00,
                     'status': 'available',
                     'category': 'Electronics',
@@ -146,7 +140,7 @@ def seed_data():
                 {
                     'title': 'Engineering Mathematics Book',
                     'description': 'Advanced Engineering Mathematics by Erwin Kreyszig. Good condition.',
-                    'image_url': 'https://placehold.co/400x300/f59e0b/white?text=Maths+Book',
+                    'image_url': None,  # Will use category image
                     'price': 22.00,
                     'status': 'sold',
                     'category': 'Books',
@@ -155,7 +149,7 @@ def seed_data():
                 {
                     'title': 'Laptop Backpack (Water Resistant)',
                     'description': '15.6-inch laptop backpack with multiple compartments.',
-                    'image_url': 'https://placehold.co/400x300/0f172a/white?text=Backpack',
+                    'image_url': None,  # Will use category image
                     'price': 25.00,
                     'status': 'available',
                     'category': 'Accessories',
@@ -190,13 +184,7 @@ def seed_data():
 
                 created_items[item['title']] = cur.fetchone()['id']
 
-
-            # =================================================================
-            # RESERVATIONS - Different statuses for demo
-            # =================================================================
-            # =================================================================
-# RESERVATIONS - Different statuses for demo
-# =================================================================
+            
             print("Creating reservations...")
             now = datetime.now(timezone.utc)
 

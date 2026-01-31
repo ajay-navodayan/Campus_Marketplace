@@ -59,8 +59,10 @@
 }
 
 .form-container {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    background: #59e0ea;
+    /* Light sky blue */
+    border: 1px solid #BAE6FD;
+    /* Matching subtle blue border */
     border-radius: var(--radius-xl);
     padding: var(--spacing-2xl);
     box-shadow: var(--shadow-lg);

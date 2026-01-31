@@ -2,21 +2,31 @@
 
 .item-card {
     position: relative;
-    background: var(--bg-card);
-    border: 2px solid var(--border-color);
+    /* Warm cream/ivory background */
+    background: linear-gradient(145deg, #fffbf5 0%, #fef7ed 100%);
+    border: 2px solid rgba(139, 92, 246, 0.12);
     border-radius: 16px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    /* Stronger shadow for visibility */
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.08),
+        0 2px 4px -1px rgba(0, 0, 0, 0.04),
+        0 0 0 1px rgba(139, 92, 246, 0.05);
 }
 
 .item-card:hover {
     border-color: #8b5cf6;
-    box-shadow: 0 20px 25px -5px rgba(139, 92, 246, 0.15), 0 10px 10px -5px rgba(139, 92, 246, 0.1);
-    transform: translateY(-6px);
+    /* Enhanced hover shadow */
+    box-shadow:
+        0 20px 25px -5px rgba(139, 92, 246, 0.2),
+        0 10px 10px -5px rgba(139, 92, 246, 0.1),
+        0 0 0 2px rgba(139, 92, 246, 0.15);
+    transform: translateY(-8px);
+    background: linear-gradient(145deg, #ffffff 0%, #fffbf5 100%);
 }
 
 .item-card:focus {
@@ -25,12 +35,12 @@
 }
 
 .item-card-sold {
-    opacity: 0.6;
-    filter: grayscale(0.3);
+    opacity: 0.65;
+    filter: grayscale(0.25);
 }
 
 .item-card-sold:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     box-shadow: var(--shadow-md);
 }
 
@@ -82,32 +92,35 @@
 
 /* Content Section */
 .item-card-content {
-    padding: 16px 18px 18px;
+    padding: 18px 20px 20px;
     display: flex;
     flex-direction: column;
     flex: 1;
-    background: var(--bg-card);
+    /* Inherit cream background from card */
+    background: transparent;
 }
 
 /* Category */
 .item-category {
     display: inline-block;
     font-size: 11px;
-    color: #6366f1;
+    color: #5b21b6;
     text-transform: uppercase;
     letter-spacing: 0.8px;
-    font-weight: 600;
-    padding: 4px 10px;
-    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+    font-weight: 700;
+    padding: 5px 12px;
+    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
     border-radius: 20px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     width: fit-content;
+    border: 1px solid rgba(139, 92, 246, 0.15);
 }
 
 /* Title */
 .item-title {
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 700;
+    color: #1e293b;
     color: var(--text-primary);
     margin: 0 0 12px 0;
     line-height: 1.4;

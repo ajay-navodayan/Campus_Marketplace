@@ -42,6 +42,12 @@ function HomePage({ categories: propCategories }) {
             {/* Hero Section */}
             <section className="hero">
                 <div className="hero-bg-pattern"></div>
+                <div className="hero-shapes">
+                    <div className="shape shape-1"></div>
+                    <div className="shape shape-2"></div>
+                    <div className="shape shape-3"></div>
+                </div>
+                <div className="hero-overlay"></div>
                 <div className="hero-content">
                     <h1 className="hero-title">
                         Buy & Sell Within<br />
@@ -74,7 +80,7 @@ function HomePage({ categories: propCategories }) {
                         </div>
                         <div className="stat-divider"></div>
                         <div className="stat">
-                            <span className="stat-number">24h</span>
+                            <span className="stat-number">30 Minute</span>
                             <span className="stat-label">Reservation Hold</span>
                         </div>
                     </div>
@@ -98,22 +104,56 @@ function HomePage({ categories: propCategories }) {
             {/* Features Section */}
             <section className="features">
                 <div className="section-header">
-                    <h2 className="section-title">How It Works</h2>
                     <p className="section-subtitle">Simple, safe, and designed for campus life</p>
                 </div>
                 <div className="features-grid">
                     <div className="feature-card">
-                        <div className="feature-icon">🔍</div>
+                        <div className="feature-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="url(#gradient1)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <defs>
+                                    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#3b82f6" />
+                                        <stop offset="100%" stopColor="#8b5cf6" />
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="m21 21-4.3-4.3" />
+                            </svg>
+                        </div>
                         <h3>Browse & Discover</h3>
                         <p>Explore items listed by students in your campus. Filter by category to find exactly what you need.</p>
                     </div>
                     <div className="feature-card">
-                        <div className="feature-icon">🔒</div>
+                        <div className="feature-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="url(#gradient2)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <defs>
+                                    <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#3b82f6" />
+                                        <stop offset="100%" stopColor="#8b5cf6" />
+                                    </linearGradient>
+                                </defs>
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                            </svg>
+                        </div>
                         <h3>Reserve Securely</h3>
-                        <p>Reserve items for 24 hours to arrange meetup. No one else can buy it while you decide.</p>
+                        <p>Reserve items for 30 minutes to arrange meetup. No one else can buy it while you decide.</p>
                     </div>
                     <div className="feature-card">
-                        <div className="feature-icon">🤝</div>
+                        <div className="feature-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="url(#gradient3)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <defs>
+                                    <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#3b82f6" />
+                                        <stop offset="100%" stopColor="#8b5cf6" />
+                                    </linearGradient>
+                                </defs>
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                        </div>
                         <h3>Meet & Trade</h3>
                         <p>Meet on campus to complete the transaction. Safe, local, and convenient.</p>
                     </div>

@@ -5,6 +5,15 @@ import StatusBadge from '../common/StatusBadge';
 import { ITEM_STATUS } from '../../constants/status';
 import './ItemCard.css';
 
+// Import category default images
+import electronicsImg from '../../assets/category-electronics.png';
+import booksImg from '../../assets/category-books.png';
+import accessoriesImg from '../../assets/category-accessories.png';
+import furnitureImg from '../../assets/category-furniture.png';
+import sportsImg from '../../assets/category-sports.png';
+import clothingImg from '../../assets/category-clothing.png';
+import otherImg from '../../assets/category-other.png';
+
 function ItemCard({ item, currentUser, onStatusClick }) {
     const navigate = useNavigate();
 
@@ -29,6 +38,20 @@ function ItemCard({ item, currentUser, onStatusClick }) {
         return colors[categoryName] || 'indigo';
     };
 
+    // Get default image for category
+    const getCategoryDefaultImage = (categoryName) => {
+        const categoryImages = {
+            'Electronics': electronicsImg,
+            'Books': booksImg,
+            'Accessories': accessoriesImg,
+            'Furniture': furnitureImg,
+            'Sports': sportsImg,
+            'Clothing': clothingImg,
+            'Other': otherImg,
+        };
+        return categoryImages[categoryName] || null;
+    };
+
     const isSold = item.status === ITEM_STATUS.SOLD;
     const isOwner = currentUser && item.seller_id === currentUser.id;
 
@@ -51,8 +74,15 @@ function ItemCard({ item, currentUser, onStatusClick }) {
         >
             {/* Image Section */}
             <div className="item-card-image">
-                {item.image_url ? (
-                    <img src={item.image_url} alt={item.title} loading="lazy" />
+                {/* Check for valid image_url (not null, not empty string, not whitespace) */}
+                {item.image_url && item.image_url.trim() !== '' ? (
+                    <img src={item.image_url} alt={item.title} />
+                ) : getCategoryDefaultImage(item.category_name) ? (
+                    <img
+                        src={getCategoryDefaultImage(item.category_name)}
+                        alt={`${item.category_name} item`}
+                        className="category-default-img"
+                    />
                 ) : (
                     <div className={`item-card-placeholder placeholder-${getCategoryColor(item.category_name)}`}>
                         <span className="placeholder-text">

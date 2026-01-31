@@ -72,9 +72,11 @@ function ItemDetailPage({ currentUser }) {
         setActionError(null);
         try {
             await createReservation(item.id, currentUser.id);
-            refetch();
+            navigate('/my-reservations');
         } catch (err) {
             setActionError(err.message);
+            // Only refetch on error to show current state if something changed
+            refetch();
         } finally {
             setActionLoading(false);
         }
