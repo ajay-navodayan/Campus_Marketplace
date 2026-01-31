@@ -6,6 +6,9 @@ from services.categories import list_categories, get_category
 from services.users import list_users, get_user
 from services.reservations import list_reservations, reserve_item, confirm_reservation, cancel_reservation
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # =============================================================================
 # APP INITIALIZATION - CORS APPLIED GLOBALLY BEFORE ANY ROUTES

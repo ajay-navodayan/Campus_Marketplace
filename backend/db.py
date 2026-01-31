@@ -1,5 +1,8 @@
 import os
+from dotenv import load_dotenv
 import psycopg
+
+load_dotenv()
 from psycopg_pool import ConnectionPool
 from contextlib import contextmanager
 from flask import g

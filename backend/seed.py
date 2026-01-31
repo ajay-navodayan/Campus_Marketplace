@@ -6,7 +6,10 @@ Run with: python seed.py
 import os
 from datetime import datetime, timedelta, timezone
 from flask import Flask
+from dotenv import load_dotenv
 from db import init_db_pool, get_db, close_pool
+
+load_dotenv()
 
 # Create a dummy app context to use the DB pool
 app = Flask(__name__)
