@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from db import init_db_pool
-from services.items import list_items, create_item, get_item
+from services.items import list_items, create_item, get_item, get_recently_listed
 from services.categories import list_categories, get_category
 from services.users import list_users, get_user
 from services.reservations import list_reservations, reserve_item, confirm_reservation, cancel_reservation
@@ -31,8 +31,9 @@ def items_endpoint():
     if request.method == 'GET':
         category_id = request.args.get('category_id')
         seller_id = request.args.get('seller_id')
+        exclude_seller_id = request.args.get('exclude_seller_id')
         status = request.args.get('status')
-        items = list_items(category_id, seller_id, status)
+        items = list_items(category_id, seller_id, status, exclude_seller_id)
         return jsonify(items)
     
     elif request.method == 'POST':
@@ -58,6 +59,12 @@ def items_endpoint():
             return jsonify(item), 201
         except Exception as e:
             return jsonify({"error": str(e)}), 400
+
+@app.route('/items/recently-listed', methods=['GET'])
+def recently_listed_endpoint():
+    """Get 4 most recently listed available items."""
+    items = get_recently_listed(limit=4)
+    return jsonify(items)
 
 @app.route('/items/<item_id>', methods=['GET'])
 def get_item_endpoint(item_id):

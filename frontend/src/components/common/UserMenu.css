@@ -147,7 +147,8 @@
 }
 
 .demo-user-item.active {
-    background: #11cf1d;
+    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+    border-left: 3px solid #8b5cf6;
 }
 
 .demo-user-avatar {
@@ -181,12 +182,21 @@
     color: var(--text-primary);
 }
 
+.demo-user-item.active .demo-user-name {
+    color: #5b21b6;
+    font-weight: 600;
+}
+
 .demo-user-email {
     font-size: 11px;
     color: var(--text-muted);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.demo-user-item.active .demo-user-email {
+    color: #7c3aed;
 }
 
 /* Backdrop for closing */

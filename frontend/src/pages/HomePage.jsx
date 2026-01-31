@@ -3,26 +3,29 @@
 
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { getItems } from '../api/items';
+import { getRecentlyListed } from '../api/items';
 import { getCategories } from '../api/categories';
 import ItemGrid from '../components/items/ItemGrid';
 import './HomePage.css';
 
-function HomePage() {
+function HomePage({ categories: propCategories }) {
     const [featuredItems, setFeaturedItems] = useState([]);
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState(propCategories || []);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Use passed categories if available, otherwise fetch
+        const categoriesPromise = propCategories ? Promise.resolve(propCategories) : getCategories();
+
         Promise.all([
-            getItems({ status: 'available' }),
-            getCategories()
+            getRecentlyListed(),
+            categoriesPromise
         ]).then(([items, cats]) => {
-            setFeaturedItems(items.slice(0, 4));
+            setFeaturedItems(items);
             setCategories(cats.filter(c => c.name !== 'Other').slice(0, 6));
             setLoading(false);
         }).catch(() => setLoading(false));
-    }, []);
+    }, [propCategories]);
 
     const categoryIcons = {
         'Electronics': '💻',

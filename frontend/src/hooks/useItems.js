@@ -9,6 +9,11 @@ export function useItems(filters = {}) {
     const [error, setError] = useState(null);
 
     const fetchItems = useCallback(async () => {
+        // Skip fetch if filters is null (waiting for required data)
+        if (filters === null) {
+            setLoading(true);
+            return;
+        }
         try {
             setLoading(true);
             setError(null);
