@@ -1,49 +1,63 @@
-/* UserMenu - Dropdown menu for user actions */
+/* UserMenu - Premium Dropdown */
 
 .user-menu {
     position: relative;
+    z-index: 50;
 }
 
+/* --- Trigger Button --- */
 .user-menu-trigger {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: 6px 12px 6px 6px;
     background: transparent;
     border: 1px solid transparent;
-    border-radius: var(--radius-md);
+    border-radius: 9999px;
+    /* Pill shape */
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--text-primary);
 }
 
-.user-menu-trigger:hover {
-    background: var(--bg-secondary);
-    border-color: var(--border-color);
-}
-
+.user-menu-trigger:hover,
 .user-menu-trigger.active {
-    background: var(--bg-secondary);
+    background: white;
+    box-shadow: var(--shadow-sm);
     border-color: var(--border-color);
 }
 
-.user-avatar {
-    width: 32px;
-    height: 32px;
+/* Namespaced to avoid collision with App.css */
+.user-menu-avatar-main {
+    width: 36px;
+    /* Slightly larger */
+    height: 36px;
     border-radius: 50%;
-    background: var(--accent);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 14px;
     font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 2px solid white;
+    /* clean border */
+    transition: transform 0.2s ease;
 }
 
-.user-name {
+.user-menu-avatar-main.guest {
+    background: #e2e8f0;
+    color: #64748b;
+}
+
+.user-menu-trigger:hover .user-menu-avatar-main {
+    transform: scale(1.05);
+}
+
+.user-menu-name-main {
     font-size: var(--font-size-sm);
-    font-weight: 500;
-    color: var(--text-primary);
-    max-width: 120px;
+    font-weight: 600;
+    max-width: 140px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -52,38 +66,93 @@
 .user-menu-chevron {
     color: var(--text-muted);
     font-size: 10px;
-    transition: transform 0.15s ease;
+    transition: transform 0.2s ease;
+    margin-left: 2px;
 }
 
 .user-menu-trigger.active .user-menu-chevron {
     transform: rotate(180deg);
 }
 
-/* Dropdown */
+/* --- Dropdown --- */
 .user-menu-dropdown {
     position: absolute;
-    top: calc(100% + var(--spacing-xs));
+    top: calc(100% + 12px);
     right: 0;
-    min-width: 200px;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    width: 280px;
+    /* Wider for comfortable layout */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    /* Modern rounded corners */
+    box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05),
+        0 0 0 1px rgba(0, 0, 0, 0.05);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-8px);
-    transition: all 0.15s ease;
+    transform: translateY(-10px) scale(0.98);
+    transform-origin: top right;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+    /* overflow: hidden;  <-- Removed to allow hover shadows/transform to pop */
 }
 
 .user-menu-dropdown.open {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
+/* --- Dropdown Content --- */
+
+/* Mobile-style Header inside Dropdown */
+.user-menu-header-mobile {
+    padding: 20px;
+    background: linear-gradient(to bottom, #f8fafc, #ffffff);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-menu-avatar-large {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    box-shadow: var(--shadow-md);
+}
+
+.user-menu-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-menu-name-large {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 16px;
+}
+
+.user-menu-email {
+    font-size: 12px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Menu Section */
 .user-menu-section {
-    padding: var(--spacing-xs) 0;
+    padding: 8px;
 }
 
 .user-menu-section:not(:last-child) {
@@ -93,82 +162,97 @@
 .user-menu-item {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: 12px;
     width: 100%;
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: 10px 12px;
     background: transparent;
     border: none;
+    border-radius: 12px;
     text-align: left;
-    font-size: var(--font-size-sm);
+    font-size: 14px;
+    font-weight: 500;
     color: var(--text-primary);
     cursor: pointer;
-    transition: background 0.1s ease;
+    transition: all 0.15s ease;
 }
 
 .user-menu-item:hover {
     background: var(--bg-secondary);
+    color: var(--accent);
+    transform: translateX(2px);
 }
 
 .user-menu-item-icon {
-    width: 16px;
+    font-size: 16px;
+    width: 20px;
     text-align: center;
-    color: var(--text-muted);
-}
-
-.user-menu-item-label {
-    flex: 1;
 }
 
 /* Demo Users Section */
 .demo-users-header {
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: 8px 12px 4px;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.05em;
     color: var(--text-muted);
+}
+
+.demo-users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .demo-user-item {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: 12px;
     width: 100%;
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: 8px 12px;
     background: transparent;
-    border: none;
+    border: 1px solid transparent;
+    /* Reserve space for border */
+    border-radius: 12px;
     text-align: left;
     cursor: pointer;
-    transition: background 0.1s ease;
-}
-
-.demo-user-item:hover {
-    background: var(--bg-secondary);
+    transition: all 0.2s ease;
+    position: relative;
 }
 
 .demo-user-item.active {
-    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
-    border-left: 3px solid #8b5cf6;
+    background: linear-gradient(to right, #eff6ff, white);
+    border-color: #dbeafe;
+}
+
+/* Hover defined AFTER active to ensure it takes precedence (or use higher specificity) */
+.demo-user-item:hover {
+    background: #e0e7ff;
+    /* Very distinct Indigo-100 */
+    border-color: #6366f1;
+    /* Indigo-500 */
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    /* Colored shadow */
+    transform: translateX(2px) scale(1.01);
+    /* Subtle movement that won't cause missed clicks */
+    z-index: 10;
 }
 
 .demo-user-avatar {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
+    border: 1px solid transparent;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 600;
-    color: var(--text-secondary);
+    transition: all 0.2s ease;
 }
 
-.demo-user-item.active .demo-user-avatar {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
+.demo-user-item:hover .demo-user-avatar {
+    transform: scale(1.1);
 }
 
 .demo-user-info {
@@ -177,31 +261,36 @@
 }
 
 .demo-user-name {
-    font-size: var(--font-size-sm);
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: 600;
     color: var(--text-primary);
 }
 
 .demo-user-item.active .demo-user-name {
-    color: #5b21b6;
-    font-weight: 600;
+    color: var(--accent);
 }
 
 .demo-user-email {
     font-size: 11px;
     color: var(--text-muted);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
-.demo-user-item.active .demo-user-email {
-    color: #7c3aed;
+/* Active indicator dot */
+.active-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
-/* Backdrop for closing */
+/* --- Backdrop --- */
 .user-menu-backdrop {
     position: fixed;
     inset: 0;
-    z-index: 999;
+    z-index: 40;
+    /* Below menu (50) */
+    background: transparent;
+    /* Invisible, just catches clicks */
+    animation: fadeIn 0.1s ease-out;
 }

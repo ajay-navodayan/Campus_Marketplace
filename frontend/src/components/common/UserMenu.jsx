@@ -1,7 +1,7 @@
 // UserMenu - Dropdown menu for user profile and actions
 
 import { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './UserMenu.css';
 
 function UserMenu({ currentUser, users = [], onUserChange }) {
@@ -15,6 +15,20 @@ function UserMenu({ currentUser, users = [], onUserChange }) {
         return String(name).split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
     };
 
+    // Generate consistent color from name
+    const getAvatarColor = (name) => {
+        if (!name) return 'var(--accent, #3b82f6)';
+        const colors = [
+            '#3b82f6', '#8b5cf6', '#ec4899', '#f43f5e',
+            '#f59e0b', '#10b981', '#06b6d4', '#6366f1'
+        ];
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        return colors[Math.abs(hash) % colors.length];
+    };
+
     // Close menu when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -24,9 +38,9 @@ function UserMenu({ currentUser, users = [], onUserChange }) {
         };
 
         if (isOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener('click', handleClickOutside);
         }
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
     }, [isOpen]);
 
     // Handle menu item click
@@ -36,9 +50,14 @@ function UserMenu({ currentUser, users = [], onUserChange }) {
     };
 
     // Handle demo user selection
-    const handleUserSelect = (user) => {
+    const handleUserSelect = (user, e) => {
+        if (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
         onUserChange(user);
         setIsOpen(false);
+        navigate('/');
     };
 
     return (
@@ -51,25 +70,46 @@ function UserMenu({ currentUser, users = [], onUserChange }) {
             >
                 {currentUser ? (
                     <>
-                        <div className="user-avatar">
+                        <div
+                            className="user-menu-avatar-main"
+                            style={{ background: getAvatarColor(currentUser.name) }}
+                        >
                             {getInitials(currentUser.name)}
                         </div>
-                        <span className="user-name">{currentUser.name}</span>
+                        <span className="user-menu-name-main">{currentUser.name}</span>
                     </>
                 ) : (
                     <>
-                        <div className="user-avatar" style={{ background: '#94a3b8' }}>
+                        <div className="user-menu-avatar-main guest">
                             👤
                         </div>
-                        <span className="user-name">Log In</span>
+                        <span className="user-menu-name-main">Log In</span>
                     </>
                 )}
                 <span className="user-menu-chevron">▼</span>
             </button>
 
+            {/* Backdrop for mobile or just to ensure clean closing */}
             {isOpen && <div className="user-menu-backdrop" onClick={() => setIsOpen(false)} />}
 
             <div className={`user-menu-dropdown ${isOpen ? 'open' : ''}`}>
+
+                {/* Header Section inside dropdown (Mobile friendly) */}
+                {currentUser && (
+                    <div className="user-menu-header-mobile">
+                        <div
+                            className="user-menu-avatar-large"
+                            style={{ background: getAvatarColor(currentUser.name) }}
+                        >
+                            {getInitials(currentUser.name)}
+                        </div>
+                        <div className="user-menu-info">
+                            <div className="user-menu-name-large">{currentUser.name}</div>
+                            <div className="user-menu-email">{currentUser.email || 'marketplace@campus.edu'}</div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Navigation Section - Only if logged in */}
                 {currentUser && (
                     <div className="user-menu-section">
@@ -94,23 +134,35 @@ function UserMenu({ currentUser, users = [], onUserChange }) {
                 {users && users.length > 0 && (
                     <div className="user-menu-section">
                         <div className="demo-users-header">
-                            {currentUser ? 'Switch User' : 'Select User'}
+                            {currentUser ? 'Switch Profile' : 'Select User'}
                         </div>
-                        {users.map(user => (
-                            <button
-                                key={user.id}
-                                className={`demo-user-item ${currentUser?.id === user.id ? 'active' : ''}`}
-                                onClick={() => handleUserSelect(user)}
-                            >
-                                <div className="demo-user-avatar">
-                                    {getInitials(user.name)}
-                                </div>
-                                <div className="demo-user-info">
-                                    <div className="demo-user-name">{user.name}</div>
-                                    <div className="demo-user-email">{user.email}</div>
-                                </div>
-                            </button>
-                        ))}
+                        <div className="demo-users-list">
+                            {users.map(user => (
+                                <button
+                                    key={user.id}
+                                    className={`demo-user-item ${currentUser?.id === user.id ? 'active' : ''}`}
+                                    onClick={(e) => handleUserSelect(user, e)}
+                                >
+                                    <div
+                                        className="demo-user-avatar"
+                                        style={{
+                                            background: currentUser?.id === user.id ? 'var(--accent)' : 'transparent',
+                                            borderColor: currentUser?.id === user.id ? 'var(--accent)' : getAvatarColor(user.name),
+                                            color: currentUser?.id === user.id ? 'white' : getAvatarColor(user.name)
+                                        }}
+                                    >
+                                        {currentUser?.id === user.id ? '✓' : getInitials(user.name)}
+                                    </div>
+                                    <div className="demo-user-info">
+                                        <div className="demo-user-name">{user.name}</div>
+                                        <div className="demo-user-email">{user.email}</div>
+                                    </div>
+                                    {currentUser?.id === user.id && (
+                                        <div className="active-indicator"></div>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 )}
             </div>
