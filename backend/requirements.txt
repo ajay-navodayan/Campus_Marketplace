@@ -5,14 +5,14 @@
 # =============================================================================
 
 # Web Framework
-flask>=3.0.0
-flask-cors>=4.0.0
+flask==3.0.0
+flask-cors==4.0.0
 
-# PostgreSQL Database Driver (psycopg 3 with connection pooling)
-psycopg[pool]>=3.1.0
+# PostgreSQL Database Driver (psycopg 3 with connection pooling and binaries)
+psycopg[binary,pool]==3.1.8
 
-# Production WSGI Server (optional, for deployment)
-gunicorn>=21.0.0
+# Environment Variables
+python-dotenv==1.0.0
 
-# Environment Variables (optional, for local development)
-python-dotenv>=1.0.0
+# WSGI Server (optional, for production)
+gunicorn==21.2.0
