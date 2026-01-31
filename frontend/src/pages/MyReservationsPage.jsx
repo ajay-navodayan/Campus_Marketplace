@@ -44,7 +44,7 @@ function MyReservationsPage({ currentUser }) {
     // Separate reservations by status
     const activeReservations = reservations.filter(r => r.status === RESERVATION_STATUS.ACTIVE);
     const completedReservations = reservations.filter(r => r.status === RESERVATION_STATUS.COMPLETED);
-    const cancelledReservations = reservations.filter(r => 
+    const cancelledReservations = reservations.filter(r =>
         r.status === RESERVATION_STATUS.CANCELLED || r.status === RESERVATION_STATUS.EXPIRED
     );
 
@@ -66,39 +66,48 @@ function MyReservationsPage({ currentUser }) {
                     You haven't reserved any items yet.
                 </div>
             ) : (
-                <div className="reservations-sections">
-                    {activeReservations.length > 0 && (
-                        <section className="reservations-section">
-                            <h2 className="section-title">Active Reservations</h2>
-                            <p className="section-note">⏳ Waiting for seller confirmation. You can cancel anytime.</p>
-                            <ReservationList
-                                reservations={activeReservations}
-                                onCancel={handleCancel}
-                                actionId={actionId}
-                                actionType={actionType}
-                            />
-                        </section>
-                    )}
+                <div className="reservations-grid">
+                    {/* Left Column - Active Reservations */}
+                    <section className="reservations-column reservations-column--active">
+                        <h2 className="section-title">Active Reservations</h2>
+                        {activeReservations.length > 0 ? (
+                            <>
+                                <p className="section-note">⏳ Waiting for seller confirmation. You can cancel anytime.</p>
+                                <ReservationList
+                                    reservations={activeReservations}
+                                    onCancel={handleCancel}
+                                    actionId={actionId}
+                                    actionType={actionType}
+                                />
+                            </>
+                        ) : (
+                            <div className="empty-column-message">No active reservations</div>
+                        )}
+                    </section>
 
-                    {completedReservations.length > 0 && (
-                        <section className="reservations-section">
-                            <h2 className="section-title"> Completed Orders</h2>
-                            <p className="section-note">📦 Successfully completed - Contact sellers for any questions</p>
-                            <ReservationList reservations={completedReservations} />
-                        </section>
-                    )}
+                    {/* Right Column - Past Reservations (Completed + Cancelled/Expired) */}
+                    <section className="reservations-column reservations-column--past">
+                        <h2 className="section-title">Past Reservations</h2>
 
-                    {cancelledReservations.length > 0 && (
-                        <section className="reservations-section">
-                            <h2 className="section-title"> Cancelled/Expired</h2>
-                            <p className="section-note">⚠️ These reservations were cancelled or expired</p>
-                            <ReservationList reservations={cancelledReservations} />
-                        </section>
-                    )}
+                        {completedReservations.length > 0 && (
+                            <div className="past-section">
+                                <h3 className="subsection-title">✅ Completed</h3>
+                                <ReservationList reservations={completedReservations} />
+                            </div>
+                        )}
+
+                        {cancelledReservations.length > 0 && (
+                            <div className="past-section">
+                                <h3 className="subsection-title">⚠️ Cancelled/Expired</h3>
+                                <ReservationList reservations={cancelledReservations} />
+                            </div>
+                        )}
+
+                        {completedReservations.length === 0 && cancelledReservations.length === 0 && (
+                            <div className="empty-column-message">No past reservations</div>
+                        )}
+                    </section>
                 </div>
-                
-                
-                
             )}
         </div>
     );

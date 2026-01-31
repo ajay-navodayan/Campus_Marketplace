@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xl);
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
     animation: fadeInUp 0.5s ease-out;
 }
@@ -29,7 +29,7 @@
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .page-title {
@@ -71,13 +71,14 @@
     border-style: solid;
 }
 
-.reservations-sections {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-2xl);
+/* Two-column grid layout */
+.reservations-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
 }
 
-.reservations-section {
+.reservations-column {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
@@ -85,7 +86,15 @@
     padding: var(--spacing-lg);
     border-radius: var(--radius-xl);
     border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.reservations-column--active {
+    border-left: 4px solid #6366f1;
+}
+
+.reservations-column--past {
+    border-left: 4px solid #94a3b8;
 }
 
 .section-title {
@@ -98,12 +107,28 @@
     gap: var(--spacing-sm);
 }
 
-.section-title::before {
-    content: '';
-    width: 4px;
-    height: 24px;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    border-radius: 2px;
+.subsection-title {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+}
+
+.past-section {
+    margin-bottom: var(--spacing-md);
+}
+
+.past-section:last-child {
+    margin-bottom: 0;
+}
+
+.empty-column-message {
+    padding: var(--spacing-xl);
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
 }
 
 .section-note {
@@ -117,7 +142,11 @@
     font-weight: 500;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+    .reservations-grid {
+        grid-template-columns: 1fr;
+    }
+
     .my-reservations-page {
         max-width: 100%;
     }

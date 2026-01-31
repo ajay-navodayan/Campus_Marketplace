@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { getUsers } from './api/users';
+import { getCategories } from './api/categories';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import HomePage from './pages/HomePage';
@@ -16,8 +17,10 @@ import './App.css';
 function App() {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
+    // Fetch users
     getUsers()
       .then(data => {
         const userList = Array.isArray(data) ? data : [];
@@ -35,6 +38,11 @@ function App() {
         console.error('Failed to fetch users:', err);
         setUsers([]);
       });
+
+    // Fetch categories once at app level
+    getCategories()
+      .then(data => setCategories(data))
+      .catch(err => console.error('Failed to fetch categories:', err));
   }, []);
 
   return (
@@ -44,9 +52,9 @@ function App() {
 
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/items" element={<ItemListPage currentUser={currentUser} />} />
-            <Route path="/items/new" element={<CreateItemPage currentUser={currentUser} />} />
+            <Route path="/" element={<HomePage categories={categories} />} />
+            <Route path="/items" element={<ItemListPage currentUser={currentUser} categories={categories} />} />
+            <Route path="/items/new" element={<CreateItemPage currentUser={currentUser} categories={categories} />} />
             <Route path="/items/:id" element={<ItemDetailPage currentUser={currentUser} />} />
             <Route path="/my-items" element={<MyItemsPage currentUser={currentUser} />} />
             <Route path="/my-reservations" element={<MyReservationsPage currentUser={currentUser} />} />
